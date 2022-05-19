@@ -1,6 +1,6 @@
 00000400 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 2022-04-13 10:29:16 PM
+Created On: 2022-05-17 1:26:47 PM
 
 00000000                             1  ;
 00000000                             2  ; Homebrew 68k Memtest
@@ -307,7 +307,7 @@ Created On: 2022-04-13 10:29:16 PM
 0000040E  4239 00180000            303      CLR.B $180000         ; In not zero, something went wrong. Assert a chip select for high mem address.
 00000414                           304  
 00000414                           305  MOVE_ON:
-00000414  B1FC 0003FFFF            306      CMPA.L #$3FFFF,A0
+00000414  B1FC 000FFFFF            306      CMPA.L #$FFFFF,A0
 0000041A  6DEA                     307      BLT MAIN_LOOP
 0000041C  60E2                     308      BRA MAIN_OUTER_LOOP
 0000041E                           309  

@@ -303,7 +303,7 @@ MAIN_LOOP:
     CLR.B $180000         ; In not zero, something went wrong. Assert a chip select for high mem address.
 
 MOVE_ON:
-    CMPA.L #$3FFFF,A0
+    CMPA.L #$FFFFF,A0
     BLT MAIN_LOOP
     BRA MAIN_OUTER_LOOP
 
@@ -327,6 +327,7 @@ STACK:
 *~Font size~14~
 *~Tab type~1~
 *~Tab size~4~
+
 
 *~Font name~Courier New~
 *~Font size~10~
