@@ -1,6 +1,6 @@
 00000500 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 2022-05-18 9:38:20 PM
+Created On: 2022-05-19 8:05:07 AM
 
 00000000                             1  *********************************
 00000000                             2  * 68681 Duart Register Addresses
@@ -50,7 +50,7 @@ Created On: 2022-05-18 9:38:20 PM
 00000500                            46  START:                  
 00000500  4FF9 00100000             47      lea     STACK_START, SP     * Set our stack pointer to be sure
 00000506  4EB9 00000588             48      jsr     initDuart           * Setup the serial port
-0000050C  41F9 000005DC             49      lea     msgBanner, A0       * Show our banner
+0000050C  41F9 000005E4             49      lea     msgBanner, A0       * Show our banner
 00000512  6100 0014                 50      bsr.w   printString
 00000516                            51  loop:
 00000516  6100 0058                 52      bsr.w   inChar              * Read a character from the serial port into d0
@@ -60,7 +60,7 @@ Created On: 2022-05-18 9:38:20 PM
 00000522                            56  ******
 00000522                            57  * Prints a newline (CR, LF)
 00000522                            58  printNewline:
-00000522  41F9 00000632             59      lea     msgNewline, a0
+00000522  41F9 00000629             59      lea     msgNewline, a0
 00000528                            60  ******
 00000528                            61  * Print a null terminated string
 00000528                            62  *
@@ -113,7 +113,7 @@ Created On: 2022-05-18 9:38:20 PM
 00000570                           109  *    
 00000570                           110  inChar:
 00000570  1039 00100001            111      move.b  DUART_SRA, d0       * Check if there's something to read
-00000576  0800 0001                112      btst.l  #1, d0              * RxRDY flag bit set?
+00000576  0800 0000                112      btst.l  #0, d0              * RxRDY flag bit set?
 0000057A  67F4                     113      beq     inChar              * Nope, try again
 0000057C  1039 00100003            114      move.b  DUART_RBA, d0       * Read Character into D0
 00000582  0200 007F                115      andi.b  #$7F, d0            * Clear MSb of character
@@ -131,26 +131,26 @@ Created On: 2022-05-18 9:38:20 PM
 000005A8  13FC 0007 00100000       127      move.b  #$07, DUART_MRA2      * Disable RTS, CTS and set 1 stop bit
 000005B0  13FC 0000 00100004       128      move.b  #$00, DUART_ACR       * Select baud rate set 1
 000005B8  13FC 00CC 00100001       129      move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
-000005C0                           130   
-000005C0  13FC 0005 00100002       131      move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
-000005C8                           132      
-000005C8  1039 00100003            133      move.b  DUART_RBA, D0         * Clear the FIFO buffer
-000005CE  1039 00100003            134      move.b  DUART_RBA, D0
-000005D4  1039 00100003            135      move.b  DUART_RBA, D0
-000005DA                           136      
-000005DA  4E75                     137      rts    
-000005DC                           138  
-000005DC                           139  **********************************
-000005DC                           140  * Strings
-000005DC                           141  *
-000005DC                           142  msgBanner:
-000005DC= 0D 0A 53 74 65 76 ...    143      dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
-000005F1= 3D 3D 3D 3D 3D 3D ...    144      dc.b       '==================',CR,LF
-00000605= 54 79 70 65 20 61 ...    145      dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
-00000632                           146      
-00000632                           147  msgNewline:
-00000632= 0D 0A 00                 148      dc.b CR,LF,0
-00000635                           149  
+000005C0  13FC 0003 00100005       130      move.b  #$03, DUART_IMR
+000005C8  13FC 0005 00100002       131      move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
+000005D0                           132      
+000005D0  1039 00100003            133      move.b  DUART_RBA, D0         * Clear the FIFO buffer
+000005D6  1039 00100003            134      move.b  DUART_RBA, D0
+000005DC  1039 00100003            135      move.b  DUART_RBA, D0
+000005E2                           136      
+000005E2  4E75                     137      rts    
+000005E4                           138  
+000005E4                           139  **********************************
+000005E4                           140  * Strings
+000005E4                           141  *
+000005E4                           142  msgBanner:
+000005E4= 0D 0A 3D 20 53 74 ...    143      dc.b CR,LF,'= Steve''s 68000 SBC =',CR,LF
+000005FD= 3D 3D 3D 3D 3D 3D ...    144      dc.b       '======================',CR,LF
+00000615= 53 65 72 69 61 6C ...    145      dc.b 'Serial Testing:', CR, LF, CR, LF, 0
+00000629                           146      
+00000629                           147  msgNewline:
+00000629= 0D 0A 00                 148      dc.b CR,LF,0
+0000062C                           149  
 00100000                           150      ORG $100000
 00100000                           151  STACK_START:
 00100000                           152  
@@ -194,8 +194,8 @@ INCHAR              570
 INITDUART           588
 LF                  A
 LOOP                516
-MSGBANNER           5DC
-MSGNEWLINE          632
+MSGBANNER           5E4
+MSGNEWLINE          629
 OUTCHAR             55E
 PRINTHEXBYTE        532
 PRINTHEXBYTE:END    556

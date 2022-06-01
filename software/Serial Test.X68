@@ -109,7 +109,7 @@ outChar:
 *    
 inChar:
     move.b  DUART_SRA, d0       * Check if there's something to read
-    btst.l  #1, d0              * RxRDY flag bit set?
+    btst.l  #0, d0              * RxRDY flag bit set?
     beq     inChar              * Nope, try again
     move.b  DUART_RBA, d0       * Read Character into D0
     andi.b  #$7F, d0            * Clear MSb of character
@@ -127,7 +127,7 @@ initDuart:
     move.b  #$07, DUART_MRA2      * Disable RTS, CTS and set 1 stop bit
     move.b  #$00, DUART_ACR       * Select baud rate set 1
     move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
- 
+    move.b  #$03, DUART_IMR
     move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
     
     move.b  DUART_RBA, D0         * Clear the FIFO buffer
@@ -140,9 +140,9 @@ initDuart:
 * Strings
 *
 msgBanner:
-    dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
-    dc.b       '==================',CR,LF
-    dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
+    dc.b CR,LF,'= Steve''s 68000 SBC =',CR,LF
+    dc.b       '======================',CR,LF
+    dc.b 'Serial Testing:', CR, LF, CR, LF, 0
     
 msgNewline:
     dc.b CR,LF,0
@@ -157,6 +157,7 @@ STACK_START:
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 

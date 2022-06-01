@@ -1,0 +1,25 @@
+Name     Steve68k;
+PartNo   00;
+Date     2022-05-31;
+Revision 01;
+Designer Steve Goyette;
+Company  ..;
+Assembly None;
+Location ;
+Device   g16v8a;
+
+
+ORDER: A19, A20, A21, AS, DTACK_UART, DTACK_I2C, DTACK_USER, USERSEL, ROMSEL, RAMSEL, UARTSEL, I2CSEL, DTACK; 
+
+
+VECTORS:
+0000XXX1*****
+0001XXX1*****
+1000XXX1*****
+1001XXX1*****
+010X0XX1*****
+010X1XX1*****
+110XX0X1*****
+110XX1X1*****
+001XXX00*****
+001XXX10*****

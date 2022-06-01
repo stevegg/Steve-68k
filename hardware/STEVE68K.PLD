@@ -1,0 +1,36 @@
+Name     Steve68k ;
+PartNo   00 ;
+Date     2022-05-31 ;
+Revision 01 ;
+Designer Steve Goyette ;
+Company  .. ;
+Assembly None ;
+Location  ;
+Device   g16v8a;
+
+/* *************** INPUT PINS *********************/
+PIN   2 = A19;		/* Address 19 */
+PIN   3 = A20;		/* Address 20 */
+PIN   4 = A21;		/* Address 21 */
+PIN   5 = AS;			/* Address Strobe */
+PIN   6 = DTACK_UART;	/* UART DTACK Output */
+PIN   7 = DTACK_I2C;		/* I2C DTACK Output */
+PIN   8 = DTACK_USER;	/* User DTACK output */
+PIN   9 = USERSEL;		/* When LOW allows user selected DTACK */
+
+/* *************** OUTPUT PINS *********************/
+PIN  12 = ROMSEL;		/* When Low selects ROM */
+PIN  13 = RAMSEL;		/* When Low selects RAM */
+PIN  14 = UARTSEL;		/* When Low selects UART */
+PIN  15 = I2CSEL;		/* When Low selects I2C */
+PIN  16 = DTACK;		/* DTACK output to the CPU */
+
+/* Output Selection */
+ROMSEL=!((!A19&!A20)&!A21);
+RAMSEL=!((A19&!A20)&!A21);
+UARTSEL=!((!A19&A20)&!A21);
+I2CSEL=!((A19&A20)&!A21);
+
+/* DTACK Selection */
+DTACK = ((UARTSEL&I2CSEL&USERSEL)&AS)#((!UARTSEL&I2CSEL&USERSEL)&DTACK_UART)#((UARTSEL&!I2CSEL&USERSEL)&DTACK_I2C)#((UARTSEL&I2CSEL&!USERSEL)&DTACK_USER);
+

@@ -1,0 +1,50 @@
+LISTING FOR LOGIC DESCRIPTION FILE: STEVE68K.pld                     Page 1
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# 60008009
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Tue May 31 15:51:16 2022
+
+  1:Name     Steve68k ;
+  2:PartNo   00 ;
+  3:Date     2022-05-31 ;
+  4:Revision 01 ;
+  5:Designer Steve Goyette ;
+  6:Company  .. ;
+  7:Assembly None ;
+  8:Location  ;
+  9:Device   g16v8a;
+ 10:
+ 11:/* *************** INPUT PINS *********************/
+ 12:PIN   2 = A19;          /* Address 19 */
+ 13:PIN   3 = A20;          /* Address 20 */
+ 14:PIN   4 = A21;          /* Address 21 */
+ 15:PIN   5 = AS;                   /* Address Strobe */
+ 16:PIN   6 = DTACK_UART;   /* UART DTACK Output */
+ 17:PIN   7 = DTACK_I2C;            /* I2C DTACK Output */
+ 18:PIN   8 = DTACK_USER;   /* User DTACK output */
+ 19:PIN   9 = USERSEL;              /* When LOW allows user selected DTACK */
+ 20:
+ 21:/* *************** OUTPUT PINS *********************/
+ 22:PIN  12 = ROMSEL;               /* When Low selects ROM */
+ 23:PIN  13 = RAMSEL;               /* When Low selects RAM */
+ 24:PIN  14 = UARTSEL;              /* When Low selects UART */
+ 25:PIN  15 = I2CSEL;               /* When Low selects I2C */
+ 26:PIN  16 = DTACK;                /* DTACK output to the CPU */
+ 27:
+ 28:/* Output Selection */
+ 29:ROMSEL=!((!A19&!A20)&!A21);
+ 30:RAMSEL=!((A19&!A20)&!A21);
+ 31:UARTSEL=!((!A19&A20)&!A21);
+ 32:I2CSEL=!((A19&A20)&!A21);
+ 33:
+ 34:/* DTACK Selection */
+ 35:DTACK = ((UARTSEL&I2CSEL&USERSEL)&AS)#((!UARTSEL&I2CSEL&USERSEL)&DTACK_UART)#((UARTSEL&!I2CSEL&USERSEL)&DTACK_I2C)#((UARTSEL&I2CSEL&!USERSEL)&DTACK_USER);
+ 36:
+ 37:
+ 38:
+
+
+
+Jedec Fuse Checksum       (3ab6)
+Jedec Transmit Checksum   (d2e6)

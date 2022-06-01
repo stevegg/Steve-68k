@@ -1,0 +1,166 @@
+00000500 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-05-30 4:03:14 PM
+
+00000000                             1  *********************************
+00000000                             2  * I2C Port
+00000000  =00180000                  3  SERIAL_OUT  equ $180000
+00000000  =00180001                  4  SERIAL_IN   equ $180001
+00000000  =00180002                  5  I2C_OUT     equ $180002
+00000000  =00180003                  6  I2C_IN      equ $180003
+00000000                             7  
+00000000                             8  **********************************
+00000000                             9  * ASCII Control Characters
+00000000                            10  *
+00000000  =00000007                 11  BEL   equ $07
+00000000  =00000008                 12  BKSP  equ $08       * CTRL-H
+00000000  =00000009                 13  TAB   equ $09
+00000000  =0000000A                 14  LF    equ $0A
+00000000  =0000000D                 15  CR    equ $0D
+00000000  =0000001B                 16  ESC   equ $1B
+00000000                            17  
+00000000  =00000003                 18  CTRLC   EQU $03     
+00000000  =00000018                 19  CTRLX   EQU $18     * Line Clear
+00000000                            20  
+00000000                            21      ORG    $0000
+00000000                            22      
+00000000                            23  **** FIRST 8 bytes loaded after reset ****
+00000000= 00100000                  24      DC.l    STACK_START         * Supervisor stack pointer
+00000004= 00000500                  25      DC.l    START               * Initial PC  
+00000008                            26  
+00000500                            27      ORG $500    
+00000500                            28  START:                  
+00000500  4FF9 00100000             29      lea     STACK_START, SP     * Set our stack pointer to be sure
+00000506  4EB9 0000056E             30      jsr     init                * Initialize everything
+0000050C  610E                      31      bsr.s   delay               * Delay while other things are setting up
+0000050E                            32  
+0000050E  41F9 00000578             33      lea     msgBanner, A0       * Show our banner
+00000514  6100 0012                 34      bsr.w   printString
+00000518                            35  loop:
+00000518  4EF8 0518                 36      jmp loop
+0000051C                            37      
+0000051C                            38  delay:
+0000051C  203C 00000100             39      move.l  #$100,d0
+00000522  7201                      40      moveq.l #1,d1
+00000524                            41   dloop:
+00000524  9081                      42      sub.l   d1,d0        ; 6 cycles for Dn.l->Dn.l
+00000526  66FC                      43      bne.s   dloop         ; 10 cycles for branch
+00000528                            44         
+00000528                            45  ******
+00000528                            46  * Print a null terminated string
+00000528                            47  *
+00000528                            48  printString:
+00000528                            49   .loop:
+00000528  1018                      50      move.b  (a0)+, d0    * Read in character
+0000052A  6704                      51      beq.s   .end         * Check for the null
+0000052C                            52      
+0000052C  6130                      53      bsr.s   outChar      * Otherwise write the character
+0000052E  60F8                      54      bra.s   .loop        * And continue
+00000530                            55   .end:
+00000530  4E75                      56      rts
+00000532                            57      
+00000532                            58  ******
+00000532                            59  * Print a hex byte
+00000532                            60  *  - Takes byte in D0
+00000532                            61  printHexByte:
+00000532  2F02                      62      move.l  D2, -(SP)
+00000534  1400                      63      move.b  D0, D2
+00000536  E808                      64      lsr.b   #$4, D0
+00000538  0600 0030                 65      add.b   #'0', D0
+0000053C  B03C 0039                 66      cmp.b   #'9', D0     * Check if the hex number was from 0-9
+00000540  6F02                      67      ble.s   .second
+00000542  5E00                      68      add.b   #7, D0       * Shift 0xA-0xF from ':' to 'A'
+00000544                            69  .second:
+00000544  6118                      70      bsr.s   outChar      * Print the digit
+00000546  0202 000F                 71      andi.b  #$0F, D2     * Now we want the lower digit Mask only the lower digit
+0000054A  0602 0030                 72      add.b   #'0', D2
+0000054E  B43C 0039                 73      cmp.b   #'9', D2     * Same as before    
+00000552  6F02                      74      ble.s   .end
+00000554  5E02                      75      add.b   #7, D2
+00000556                            76  .end:
+00000556  1002                      77      move.b  D2, D0
+00000558  6104                      78      bsr.s   outChar      * Print the lower digit
+0000055A  241F                      79      move.l  (SP)+, D2
+0000055C  4E75                      80      rts
+0000055E                            81  
+0000055E                            82  *****
+0000055E                            83  * Writes a character to the serial port
+0000055E                            84  outChar:
+0000055E  13C0 00180000             85      move.b d0, SERIAL_OUT    
+00000564  4E75                      86      rts
+00000566                            87  
+00000566                            88  *****
+00000566                            89  * Reads in a character from the serial port
+00000566                            90  *    
+00000566                            91  inChar:
+00000566  1039 00180001             92      move.b  SERIAL_IN, d0       * Check if there's something to read
+0000056C  4E75                      93      rts
+0000056E                            94      
+0000056E                            95  *****
+0000056E                            96  * Initializes everything
+0000056E                            97  *
+0000056E                            98  init:
+0000056E                            99  
+0000056E  6104                     100      bsr.s   initSerial
+00000570  6104                     101      bsr.s   initDisplay
+00000572                           102      
+00000572  4E75                     103      rts    
+00000574                           104      
+00000574                           105  initSerial:
+00000574  4E75                     106      rts
+00000576                           107      
+00000576                           108  initDisplay:
+00000576  4E75                     109      rts
+00000578                           110      
+00000578                           111  
+00000578                           112  **********************************
+00000578                           113  * Strings
+00000578                           114  *
+00000578                           115  msgBanner:
+00000578= 0D 0A 53 74 65 76 ...    116      dc.b CR,LF,'Steve''s 68000 SBC', CR, LF, 0
+0000058E                           117     
+0000058E                           118  msgNewline:
+0000058E= 0D 0A 00                 119      dc.b CR,LF,0
+00000591                           120  
+00100000                           121      ORG $100000
+00100000                           122  STACK_START:
+00100000                           123  
+00100000                           124      END    START            * last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+BEL                 7
+BKSP                8
+CR                  D
+CTRLC               3
+CTRLX               18
+DELAY               51C
+DLOOP               524
+ESC                 1B
+I2C_IN              180003
+I2C_OUT             180002
+INCHAR              566
+INIT                56E
+INITDISPLAY         576
+INITSERIAL          574
+LF                  A
+LOOP                518
+MSGBANNER           578
+MSGNEWLINE          58E
+OUTCHAR             55E
+PRINTHEXBYTE        532
+PRINTHEXBYTE:END    556
+PRINTHEXBYTE:SECOND  544
+PRINTSTRING         528
+PRINTSTRING:END     530
+PRINTSTRING:LOOP    528
+SERIAL_IN           180001
+SERIAL_OUT          180000
+STACK_START         100000
+START               500
+TAB                 9

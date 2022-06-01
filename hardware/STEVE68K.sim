@@ -1,0 +1,54 @@
+%SIGNAL
+PIN   2 =  A19 
+PIN   3 =  A20 
+PIN   4 =  A21 
+PIN   5 =  AS 
+PIN  16 =  DTACK 
+PIN   7 =  DTACK_I2C 
+PIN   6 =  DTACK_UART 
+PIN   8 =  DTACK_USER 
+PIN  15 =  I2CSEL 
+PIN  13 =  RAMSEL 
+PIN  12 =  ROMSEL 
+PIN  14 =  UARTSEL 
+PIN   9 =  USERSEL 
+%END
+
+%FIELD
+%END
+
+%EQUATION
+DTACK =>
+    AS & I2CSEL & UARTSEL & USERSEL
+  # DTACK_UART & I2CSEL & !UARTSEL & USERSEL
+  # DTACK_I2C & !I2CSEL & UARTSEL & USERSEL
+  # DTACK_USER & I2CSEL & UARTSEL & !USERSEL
+
+I2CSEL =>
+    A19 & A20 & !A21
+
+RAMSEL =>
+    A19 & !A20 & !A21
+
+ROMSEL =>
+    !A19 & !A20 & !A21
+
+UARTSEL =>
+    !A19 & A20 & !A21
+
+DTACK.oe  =>
+    1 
+
+I2CSEL.oe  =>
+    1 
+
+RAMSEL.oe  =>
+    1 
+
+ROMSEL.oe  =>
+    1 
+
+UARTSEL.oe  =>
+    1 
+
+%END

@@ -1,0 +1,38 @@
+# Berkeley PLA format generated using
+#
+# CUPL(WM)        5.0a Serial# 60008009
+# Device          g16v8ma  Library DLIB-h-40-8
+# Created         Tue May 31 15:51:16 2022
+# Name            Steve68k 
+# Partno          00 
+# Revision        01 
+# Date            2022-05-31 
+# Designer        Steve Goyette 
+# Company         .. 
+# Assembly        None 
+# Location        
+#
+# Inputs  1 A19 A20 A21 
+#         AS DTACK DTACK_I2C DTACK_UART 
+#         DTACK_USER I2CSEL RAMSEL ROMSEL 
+#         UARTSEL USERSEL 
+# Outputs DTACK !I2CSEL !RAMSEL !ROMSEL 
+#         !UARTSEL DTACK.oe I2CSEL.oe RAMSEL.oe 
+#         ROMSEL.oe UARTSEL.oe 
+.i 14
+.o 10
+.p 13
+----1----1--11 1~~~~~~~~~
+-------1-1--01 1~~~~~~~~~
+------1--0--11 1~~~~~~~~~
+--------11--10 1~~~~~~~~~
+-110---------- ~1~~~~~~~~
+-100---------- ~~1~~~~~~~
+-000---------- ~~~1~~~~~~
+-010---------- ~~~~1~~~~~
+1------------- ~~~~~1~~~~
+1------------- ~~~~~~1~~~
+1------------- ~~~~~~~1~~
+1------------- ~~~~~~~~1~
+1------------- ~~~~~~~~~1
+.end
