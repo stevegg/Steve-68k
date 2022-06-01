@@ -4,8 +4,8 @@
 *******************************************************************************
 
 CUPL(WM)        5.0a Serial# 60008009
-Device          g16v8ma  Library DLIB-h-40-8
-Created         Tue May 31 15:51:16 2022
+Device          virtual  Library DLIB-h-40-1
+Created         Wed Jun 01 06:20:17 2022
 Name            Steve68k 
 Partno          00 
 Revision        01 
@@ -26,31 +26,24 @@ DTACK =>
   # DTACK_USER & I2CSEL & UARTSEL & !USERSEL
 
 I2CSEL =>
-    A19 & A20 & !A21
+    !A19
+  # !A20
+  # A21
 
 RAMSEL =>
-    A19 & !A20 & !A21
+    !A19
+  # A20
+  # A21
 
 ROMSEL =>
-    !A19 & !A20 & !A21
+    A19
+  # A20
+  # A21
 
 UARTSEL =>
-    !A19 & A20 & !A21
-
-DTACK.oe  =>
-    1 
-
-I2CSEL.oe  =>
-    1 
-
-RAMSEL.oe  =>
-    1 
-
-ROMSEL.oe  =>
-    1 
-
-UARTSEL.oe  =>
-    1 
+    A19
+  # !A20
+  # A21
 
 
 ===============================================================================
@@ -65,126 +58,20 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     A20                         3        V        -       -       -     
     A21                         4        V        -       -       -     
     AS                          5        V        -       -       -     
-    DTACK                       16       V        4       7       1     
+    CLK                         1        V        -       -       -     
+    DTACK                       16       V        4       0       1     
     DTACK_I2C                   7        V        -       -       -     
     DTACK_UART                  6        V        -       -       -     
     DTACK_USER                  8        V        -       -       -     
-    I2CSEL                      15       V        1       7       1     
-    RAMSEL                      13       V        1       7       1     
-    ROMSEL                      12       V        1       7       1     
-    UARTSEL                     14       V        1       7       1     
+    I2CSEL                      15       V        3       0       1     
+    RAMSEL                      13       V        3       0       1     
+    ROMSEL                      12       V        3       0       1     
+    UARTSEL                     14       V        3       0       1     
     USERSEL                     9        V        -       -       -     
-    DTACK               oe      16       D        1       1       0     
-    I2CSEL              oe      15       D        1       1       0     
-    RAMSEL              oe      13       D        1       1       0     
-    ROMSEL              oe      12       D        1       1       0     
-    UARTSEL             oe      14       D        1       1       0     
 
 
 LEGEND    D : default variable         F : field      G : group
           I : intermediate variable    N : node       M : extended node
           U : undefined                V : variable   X : extended variable
           T : function
-
-
-===============================================================================
-                                   Fuse Plot
-===============================================================================
-
-Syn   02192 - Ac0   02193 - 
-
-Pin #19  02048  Pol x  02120  Ac1 - 
- 00000 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00032 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00064 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00096 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00128 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00160 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00192 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00224 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #18  02049  Pol x  02121  Ac1 - 
- 00256 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00288 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00320 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00352 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00384 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00416 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00448 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00480 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #17  02050  Pol x  02122  Ac1 - 
- 00512 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00544 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00576 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00608 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00640 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00672 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00704 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00736 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #16  02051  Pol -  02123  Ac1 - 
- 00768 -------------------------------- 
- 00800 ------------x-----x---x-----x--- 
- 00832 ----------------x-x----x----x--- 
- 00864 -------------------xx-x-----x--- 
- 00896 ------------------x---x-x----x-- 
- 00928 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00960 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 00992 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #15  02052  Pol x  02124  Ac1 - 
- 01024 -------------------------------- 
- 01056 x---x----x---------------------- 
- 01088 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01120 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01152 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01184 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01216 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01248 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #14  02053  Pol x  02125  Ac1 - 
- 01280 -------------------------------- 
- 01312 -x--x----x---------------------- 
- 01344 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01376 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01408 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01440 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01472 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01504 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #13  02054  Pol x  02126  Ac1 - 
- 01536 -------------------------------- 
- 01568 x----x---x---------------------- 
- 01600 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01632 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01664 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01696 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01728 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01760 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #12  02055  Pol x  02127  Ac1 - 
- 01792 -------------------------------- 
- 01824 -x---x---x---------------------- 
- 01856 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01888 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01920 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01952 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 01984 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
- 02016 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-
-
-LEGEND    X : fuse not blown 
-          - : fuse blown 
-
-===============================================================================
-                                 Chip Diagram
-===============================================================================
-
-                               ______________
-                              |   Steve68k   |
-                          x---|1           20|---x Vcc                      
-                      A19 x---|2           19|---x                          
-                      A20 x---|3           18|---x                          
-                      A21 x---|4           17|---x                          
-                       AS x---|5           16|---x DTACK                    
-               DTACK_UART x---|6           15|---x I2CSEL                   
-                DTACK_I2C x---|7           14|---x UARTSEL                  
-               DTACK_USER x---|8           13|---x RAMSEL                   
-                  USERSEL x---|9           12|---x ROMSEL                   
-                      GND x---|10          11|---x                          
-                              |______________|
 

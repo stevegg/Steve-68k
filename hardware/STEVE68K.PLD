@@ -9,6 +9,7 @@ Location  ;
 Device   g16v8a;
 
 /* *************** INPUT PINS *********************/
+PIN   1 = CLK;		/* CLK */
 PIN   2 = A19;		/* Address 19 */
 PIN   3 = A20;		/* Address 20 */
 PIN   4 = A21;		/* Address 21 */

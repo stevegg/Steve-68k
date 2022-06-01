@@ -3,6 +3,7 @@ PIN   2 =  A19
 PIN   3 =  A20 
 PIN   4 =  A21 
 PIN   5 =  AS 
+PIN   1 =  CLK 
 PIN  16 =  DTACK 
 PIN   7 =  DTACK_I2C 
 PIN   6 =  DTACK_UART 
@@ -25,30 +26,23 @@ DTACK =>
   # DTACK_USER & I2CSEL & UARTSEL & !USERSEL
 
 I2CSEL =>
-    A19 & A20 & !A21
+    !A19
+  # !A20
+  # A21
 
 RAMSEL =>
-    A19 & !A20 & !A21
+    !A19
+  # A20
+  # A21
 
 ROMSEL =>
-    !A19 & !A20 & !A21
+    A19
+  # A20
+  # A21
 
 UARTSEL =>
-    !A19 & A20 & !A21
-
-DTACK.oe  =>
-    1 
-
-I2CSEL.oe  =>
-    1 
-
-RAMSEL.oe  =>
-    1 
-
-ROMSEL.oe  =>
-    1 
-
-UARTSEL.oe  =>
-    1 
+    A19
+  # !A20
+  # A21
 
 %END
