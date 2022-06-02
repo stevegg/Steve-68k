@@ -26,12 +26,21 @@ PIN  14 = UARTSEL;		/* When Low selects UART */
 PIN  15 = I2CSEL;		/* When Low selects I2C */
 PIN  16 = DTACK;		/* DTACK output to the CPU */
 
-/* Output Selection */
-ROMSEL=!((!A19&!A20)&!A21);
-RAMSEL=!((A19&!A20)&!A21);
-UARTSEL=!((!A19&A20)&!A21);
-I2CSEL=!((A19&A20)&!A21);
+/* IO Decoding.  LOTS of wasted space */
+field ioaddr = [A19, A20, A21];
+ROMeqn = ioaddr:[0..7FFFF];		/* 512k of ROM */
+RAMeqn = ioaddr:[80000..9FFFF];	/* 512k of RAM */
+UARTeqn = ioaddr:[100000..17FFFF];	/* 512k of UART....LOL */
+I2Ceqn = ioaddr:[180000..185000];	/* I2C Select */
 
-/* DTACK Selection */
-DTACK = ((UARTSEL&I2CSEL&USERSEL)&AS)#((!UARTSEL&I2CSEL&USERSEL)&DTACK_UART)#((UARTSEL&!I2CSEL&USERSEL)&DTACK_I2C)#((UARTSEL&I2CSEL&!USERSEL)&DTACK_USER);
+ROMSEL=!ROMeqn;
+RAMSEL=!RAMeqn;
+UARTSEL=!UARTeqn;
+I2CSEL=!I2Ceqn;
+
+
+DTACK=(!USERSEL&DTACK_USER)
+    # ((ROMeqn#RAMeqn)&AS)
+    # (UARTeqn&DTACK_UART)
+    # (I2Ceqn&DTACK_I2C);
 

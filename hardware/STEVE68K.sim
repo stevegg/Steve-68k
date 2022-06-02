@@ -16,33 +16,38 @@ PIN   9 =  USERSEL
 %END
 
 %FIELD
+FIELD ioaddr = A19,A20,A21
 %END
 
 %EQUATION
 DTACK =>
-    AS & I2CSEL & UARTSEL & USERSEL
-  # DTACK_UART & I2CSEL & !UARTSEL & USERSEL
-  # DTACK_I2C & !I2CSEL & UARTSEL & USERSEL
-  # DTACK_USER & I2CSEL & UARTSEL & !USERSEL
+    DTACK_USER & !USERSEL
+  # !A20 & !A21 & AS
+  # !A19 & A20 & !A21 & DTACK_UART
+  # A19 & A20 & !A21 & DTACK_I2C
 
 I2CSEL =>
-    !A19
-  # !A20
-  # A21
+    A19 & A20 & !A21
+
+I2Ceqn =>
+    A19 & A20 & !A21
 
 RAMSEL =>
-    !A19
-  # A20
-  # A21
+    A19 & !A20 & !A21
+
+RAMeqn =>
+    A19 & !A20 & !A21
 
 ROMSEL =>
-    A19
-  # A20
-  # A21
+    !A19 & !A20 & !A21
+
+ROMeqn =>
+    !A19 & !A20 & !A21
 
 UARTSEL =>
-    A19
-  # !A20
-  # A21
+    !A19 & A20 & !A21
+
+UARTeqn =>
+    !A19 & A20 & !A21
 
 %END

@@ -1,37 +1,32 @@
-#$ TOOL CUPL
-# Berkeley PLA format generated using CUPL(WM) 5.0a
-# Serial#  60008009
-# Created  Wed Jun 01 06:20:17 2022
+# Berkeley PLA format generated using
 #
-#    Name        Steve68k
-#    Partno      00
-#    Revision    01
-#    Date        2022-05-31
-#    Designer    Steve Goyette
-#    Company     ..
-#    Assembly    None
-#    Location    
+# CUPL(WM)        5.0a Serial# 60008009
+# Device          g16v8as  Library DLIB-h-40-2
+# Created         Wed Jun 01 20:31:34 2022
+# Name            Steve68k 
+# Partno          00 
+# Revision        01 
+# Date            2022-05-31 
+# Designer        Steve Goyette 
+# Company         .. 
+# Assembly        None 
+# Location        
 #
-#$ TITLE  Steve68k
-#$ MODULE  Steve68k
-#$ JEDECFILE  Steve68k
-#$ DEVICE  virtual
-#$ PINS  14 A19+:2 A20+:3 A21+:4 AS+:5 CLK+:1 DTACK+:16 DTACK_I2C+:7 DTACK_UART+:6 DTACK_USER+:8 I2CSEL+:15 RAMSEL+:13 ROMSEL+:12 UARTSEL+:14 USERSEL+:9 
-.i 10
+# Inputs  A19 A20 A21 AS 
+#         CLK DTACK DTACK_I2C DTACK_UART 
+#         DTACK_USER I2CSEL RAMSEL ROMSEL 
+#         UARTSEL USERSEL 
+# Outputs DTACK !I2CSEL !RAMSEL !ROMSEL 
+#         !UARTSEL 
+.i 14
 .o 5
-.type f
-.ilb  A19 A20 A21 AS DTACK_I2C DTACK_UART DTACK_USER I2CSEL UARTSEL 
-      USERSEL 
-.ob   DTACK I2CSEL RAMSEL ROMSEL UARTSEL 
-.phase 11111
-.p 9
----1---111 10000
------1-101 10000
-----1--011 10000
-------1110 10000
-0--------- 01100
--0-------- 01001
---1------- 01111
--1-------- 00110
-1--------- 00011
-.e
+.p 8
+--------1----0 1~~~~
+-001---------- 1~~~~
+010----1------ 1~~~~
+110---1------- 1~~~~
+110----------- ~1~~~
+100----------- ~~1~~
+000----------- ~~~1~
+010----------- ~~~~1
+.end
