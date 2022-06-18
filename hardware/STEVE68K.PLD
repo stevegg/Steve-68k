@@ -25,22 +25,32 @@ PIN  13 = RAMSEL;		/* When Low selects RAM */
 PIN  14 = UARTSEL;		/* When Low selects UART */
 PIN  15 = I2CSEL;		/* When Low selects I2C */
 PIN  16 = DTACK;		/* DTACK output to the CPU */
+PIN  17 = ERR;		/* When an out of range address is selected */
+
 
 /* IO Decoding.  LOTS of wasted space */
 field ioaddr = [A19, A20, A21];
 ROMeqn = ioaddr:[0..7FFFF];		/* 512k of ROM */
 RAMeqn = ioaddr:[80000..9FFFF];	/* 512k of RAM */
 UARTeqn = ioaddr:[100000..17FFFF];	/* 512k of UART....LOL */
-I2Ceqn = ioaddr:[180000..185000];	/* I2C Select */
+I2Ceqn = ioaddr:[180000..180050];	/* I2C Select */
+ERReqn = ioaddr:[380000..385000]; /* Out of range address */
 
 ROMSEL=!ROMeqn;
 RAMSEL=!RAMeqn;
 UARTSEL=!UARTeqn;
 I2CSEL=!I2Ceqn;
+ERR=!ERReqn;
 
-
+/*
 DTACK=(!USERSEL&DTACK_USER)
     # ((ROMeqn#RAMeqn)&AS)
     # (UARTeqn&DTACK_UART)
     # (I2Ceqn&DTACK_I2C);
+*/
+
+DTACK=(!USERSEL&DTACK_USER)
+    # ((ROMeqn#RAMeqn)&AS)
+    # (UARTeqn&DTACK_UART)
+    # (I2Ceqn&AS);
 

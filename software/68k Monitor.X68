@@ -31,30 +31,30 @@
 **********************************
 * Defines
 *
-RAM_START           equ     $40000
-RAM_END             equ     $44000
+RAM_START           equ     $80000
+RAM_END             equ     $FFFFF
 MAX_LINE_LENGTH     equ     80
 
 *********************************
 * 68681 Duart Register Addresses
 *
-DUART equ $1C0000       * Base Addr of DUART
-MRA   equ DUART+0       * Mode Register A           (R/W)
-SRA   equ DUART+2       * Status Register A         (r)
-CSRA  equ DUART+2       * Clock Select Register A   (w)
-CRA   equ DUART+4       * Commands Register A       (w)
-RBA   equ DUART+6       * Receiver Buffer A         (r)
-TBA   equ DUART+6       * Transmitter Buffer A      (w)
-ACR   equ DUART+8       * Aux. Control Register     (R/W)
-ISR   equ DUART+10      * Interrupt Status Register (R)
-IMR   equ DUART+10      * Interrupt Mask Register   (W)
-MRB   equ DUART+16      * Mode Register B           (R/W)
-SRB   equ DUART+18      * Status Register B         (R)
-CSRB  equ DUART+18      * Clock Select Register B   (W)
-CRB   equ DUART+20      * Commands Register B       (W)
-RBB   equ DUART+22      * Reciever Buffer B         (R)
-TBB   equ DUART+22      * Transmitter Buffer B      (W)
-IVR   equ DUART+24      * Interrupt Vector Register (R/W)
+DUART equ $100000       * Base Addr of DUART
+MRA   equ $100000       * Mode Register A           (R/W)
+SRA   equ $100001       * Status Register A         (r)
+CSRA  equ $100001       * Clock Select Register A   (w)
+CRA   equ $100002       * Commands Register A       (w)
+RBA   equ $100003       * Receiver Buffer A         (r)
+TBA   equ $100003       * Transmitter Buffer A      (w)
+ACR   equ $100004       * Aux. Control Register     (R/W)
+ISR   equ $100005       * Interrupt Status Register (R)
+IMR   equ $100005       * Interrupt Mask Register   (W)
+MRB   equ $100008       * Mode Register B           (R/W)
+SRB   equ $100009       * Status Register B         (R)
+CSRB  equ $100009       * Clock Select Register B   (W)
+CRB   equ $10000A       * Commands Register B       (W)
+RBB   equ $10000B       * Reciever Buffer B         (R)
+TBB   equ $10000B       * Transmitter Buffer B      (W)
+IVR   equ $10000C       * Interrupt Vector Register (R/W)
 
 **********************************
 * ASCII Control Characters
@@ -79,27 +79,21 @@ varLineBuf  equ     varCurAddr-MAX_LINE_LENGTH-2     * Line buffer
 varLast     equ     varLineBuf
 
 
-**********************************
-* Defines 2 
-*
-STACK_START         equ     varLast
-
-
 
 **** PROGRAM STARTS HERE ****
     
-    ORG     $0000
+    ORG     $400
     
 **** FIRST 8 bytes loaded after reset ****
-    DC.l    STACK_START  * Supervisor stack pointer
+    DC.l    STACK        * Supervisor stack pointer
     DC.l    START        * Initial PC    
     
-    
+   
 ********************************************
 * Cold start entry point
 *
 START:
-    lea     STACK_START, SP     * Set our stack pointer to be sure
+    lea     STACK, SP           * Set our stack pointer to be sure
     jsr     initDuart           * Setup the serial port
  
 ********************************************
@@ -679,13 +673,9 @@ msgNewline:
 msgColonSpace:
     dc.b ': ',0
 
-
-
-
-
-
-
-
+    ORG $100000
+STACK:
+    
     END    START            * last line of source
 
 
@@ -693,6 +683,7 @@ msgColonSpace:
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

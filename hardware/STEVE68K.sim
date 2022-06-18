@@ -8,6 +8,7 @@ PIN  16 =  DTACK
 PIN   7 =  DTACK_I2C 
 PIN   6 =  DTACK_UART 
 PIN   8 =  DTACK_USER 
+PIN  17 =  ERR 
 PIN  15 =  I2CSEL 
 PIN  13 =  RAMSEL 
 PIN  12 =  ROMSEL 
@@ -24,7 +25,13 @@ DTACK =>
     DTACK_USER & !USERSEL
   # !A20 & !A21 & AS
   # !A19 & A20 & !A21 & DTACK_UART
-  # A19 & A20 & !A21 & DTACK_I2C
+  # A19 & A20 & !A21 & AS
+
+ERR =>
+    A19 & A20 & A21
+
+ERReqn =>
+    A19 & A20 & A21
 
 I2CSEL =>
     A19 & A20 & !A21

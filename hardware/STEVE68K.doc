@@ -5,7 +5,7 @@
 
 CUPL(WM)        5.0a Serial# 60008009
 Device          g16v8as  Library DLIB-h-40-2
-Created         Wed Jun 01 20:31:34 2022
+Created         Thu Jun 16 13:41:13 2022
 Name            Steve68k 
 Partno          00 
 Revision        01 
@@ -23,7 +23,13 @@ DTACK =>
     DTACK_USER & !USERSEL
   # !A20 & !A21 & AS
   # !A19 & A20 & !A21 & DTACK_UART
-  # A19 & A20 & !A21 & DTACK_I2C
+  # A19 & A20 & !A21 & AS
+
+ERR =>
+    A19 & A20 & A21
+
+ERReqn =>
+    A19 & A20 & A21
 
 I2CSEL =>
     A19 & A20 & !A21
@@ -70,6 +76,8 @@ Pol   Name              Ext     Pin     Type     Used   Pterms  Level
     DTACK_I2C                   7        V        -       -       -     
     DTACK_UART                  6        V        -       -       -     
     DTACK_USER                  8        V        -       -       -     
+    ERR                         17       V        1       8       1     
+    ERReqn                      0        I        1       -       -     
     I2CSEL                      15       V        1       8       1     
     I2Ceqn                      0        I        1       -       -     
     RAMSEL                      13       V        1       8       1     
@@ -112,8 +120,8 @@ Pin #18  02049  Pol x  02121  Ac1 -
  00416 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00448 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00480 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
-Pin #17  02050  Pol x  02122  Ac1 - 
- 00512 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
+Pin #17  02050  Pol x  02122  Ac1 x 
+ 00512 x---x---x----------------------- 
  00544 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00576 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00608 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -125,7 +133,7 @@ Pin #16  02051  Pol -  02123  Ac1 x
  00768 ------------------------x----x-- 
  00800 -----x---x--x------------------- 
  00832 -x--x----x------x--------------- 
- 00864 x---x----x----------x----------- 
+ 00864 x---x----x--x------------------- 
  00896 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00928 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
  00960 xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx 
@@ -180,7 +188,7 @@ LEGEND    X : fuse not blown
                       CLK x---|1           20|---x Vcc                      
                       A19 x---|2           19|---x                          
                       A20 x---|3           18|---x                          
-                      A21 x---|4           17|---x                          
+                      A21 x---|4           17|---x ERR                      
                        AS x---|5           16|---x DTACK                    
                DTACK_UART x---|6           15|---x I2CSEL                   
                 DTACK_I2C x---|7           14|---x UARTSEL                  

@@ -3,7 +3,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: STEVE68K.pld                     Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# 60008009
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Wed Jun 01 20:31:34 2022
+Created Thu Jun 16 13:41:13 2022
 
   1:Name     Steve68k ;
   2:PartNo   00 ;
@@ -32,29 +32,47 @@ Created Wed Jun 01 20:31:34 2022
  25:PIN  14 = UARTSEL;              /* When Low selects UART */
  26:PIN  15 = I2CSEL;               /* When Low selects I2C */
  27:PIN  16 = DTACK;                /* DTACK output to the CPU */
- 28:
- 29:/* IO Decoding.  LOTS of wasted space */
- 30:field ioaddr = [A19, A20, A21];
- 31:ROMeqn = ioaddr:[0..7FFFF];             /* 512k of ROM */
- 32:RAMeqn = ioaddr:[80000..9FFFF]; /* 512k of RAM */
- 33:UARTeqn = ioaddr:[100000..17FFFF];      /* 512k of UART....LOL */
- 34:I2Ceqn = ioaddr:[180000..185000];       /* I2C Select */
- 35:
- 36:ROMSEL=!ROMeqn;
- 37:RAMSEL=!RAMeqn;
- 38:UARTSEL=!UARTeqn;
- 39:I2CSEL=!I2Ceqn;
- 40:
- 41:
- 42:DTACK=(!USERSEL&DTACK_USER)
- 43:    # ((ROMeqn#RAMeqn)&AS)
- 44:    # (UARTeqn&DTACK_UART)
- 45:    # (I2Ceqn&DTACK_I2C);
- 46:
- 47:
- 48:
+ 28:PIN  17 = ERR;          /* When an out of range address is selected */
+ 29:
+ 30:
+ 31:/* IO Decoding.  LOTS of wasted space */
+ 32:field ioaddr = [A19, A20, A21];
+ 33:ROMeqn = ioaddr:[0..7FFFF];             /* 512k of ROM */
+ 34:RAMeqn = ioaddr:[80000..9FFFF]; /* 512k of RAM */
+ 35:UARTeqn = ioaddr:[100000..17FFFF];      /* 512k of UART....LOL */
+ 36:I2Ceqn = ioaddr:[180000..180050];       /* I2C Select */
+ 37:ERReqn = ioaddr:[380000..385000]; /* Out of range address */
+ 38:
+ 39:ROMSEL=!ROMeqn;
+ 40:RAMSEL=!RAMeqn;
+ 41:UARTSEL=!UARTeqn;
+ 42:I2CSEL=!I2Ceqn;
+ 43:ERR=!ERReqn;
+ 44:
+ 45:/*
+ 46:DTACK=(!USERSEL&DTACK_USER)
+ 47:    # ((ROMeqn#RAMeqn)&AS)
+ 48:    # (UARTeqn&DTACK_UART)
+ 49:    # (I2Ceqn&DTACK_I2C);
+ 50:*/
+ 51:
+ 52:DTACK=(!USERSEL&DTACK_USER)
+ 53:    # ((ROMeqn#RAMeqn)&AS)
+
+LISTING FOR LOGIC DESCRIPTION FILE: STEVE68K.pld                     Page 2
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# 60008009
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Thu Jun 16 13:41:13 2022
+
+ 54:    # (UARTeqn&DTACK_UART)
+ 55:    # (I2Ceqn&AS);
+ 56:
+ 57:
+ 58:
 
 
 
-Jedec Fuse Checksum       (270b)
-Jedec Transmit Checksum   (abc3)
+Jedec Fuse Checksum       (2af1)
+Jedec Transmit Checksum   (b3aa)

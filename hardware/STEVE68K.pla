@@ -2,7 +2,7 @@
 #
 # CUPL(WM)        5.0a Serial# 60008009
 # Device          g16v8as  Library DLIB-h-40-2
-# Created         Wed Jun 01 20:31:34 2022
+# Created         Thu Jun 16 13:41:13 2022
 # Name            Steve68k 
 # Partno          00 
 # Revision        01 
@@ -14,19 +14,20 @@
 #
 # Inputs  A19 A20 A21 AS 
 #         CLK DTACK DTACK_I2C DTACK_UART 
-#         DTACK_USER I2CSEL RAMSEL ROMSEL 
-#         UARTSEL USERSEL 
-# Outputs DTACK !I2CSEL !RAMSEL !ROMSEL 
-#         !UARTSEL 
-.i 14
-.o 5
-.p 8
---------1----0 1~~~~
--001---------- 1~~~~
-010----1------ 1~~~~
-110---1------- 1~~~~
-110----------- ~1~~~
-100----------- ~~1~~
-000----------- ~~~1~
-010----------- ~~~~1
+#         DTACK_USER ERR I2CSEL RAMSEL 
+#         ROMSEL UARTSEL USERSEL 
+# Outputs DTACK !ERR !I2CSEL !RAMSEL 
+#         !ROMSEL !UARTSEL 
+.i 15
+.o 6
+.p 9
+--------1-----0 1~~~~~
+-001----------- 1~~~~~
+010----1------- 1~~~~~
+1101----------- 1~~~~~
+111------------ ~1~~~~
+110------------ ~~1~~~
+100------------ ~~~1~~
+000------------ ~~~~1~
+010------------ ~~~~~1
 .end

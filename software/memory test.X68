@@ -23,7 +23,13 @@
 ;
 ; 1 tab == 4 spaces!
 
+UART_BASE EQU $100000
+I2C_BASE EQU $180000
 
+ERR_SIGNAL EQU UART_BASE
+LOOP_SIGNAL EQU I2C_BASE
+
+DELAY_AMT EQU $3D0900 ; 4,000,000 which should roughly equate to 1 second??? ish
 
     ORG 0
 ; VECTOR TABLE
@@ -300,14 +306,25 @@ MAIN_LOOP:
     CLR.B (A0)            ; Clear mem location
     TST.B (A0)+           ; Check if mem location reads as zero
     BEQ MOVE_ON           ; If zero, assume write bus cycle succeeded
-    CLR.B $180000         ; In not zero, something went wrong. Assert a chip select for high mem address.
+    CLR.B ERR_SIGNAL      ; In not zero, something went wrong. Assert a chip select for high mem address.
+                          ; which should enable the UART address (and associated light)
 
 MOVE_ON:
     CMPA.L #$FFFFF,A0
     BLT MAIN_LOOP
-    BRA MAIN_OUTER_LOOP
+    
+    ; Delay so we can signal the LOOP_SIGNAL LED (I2C LED) long enough to be visible
+    MOVE.L #delay,d0
+    MOVEQ.L #1,d1
+DELAY: 
+    MOVE.B #$00, LOOP_SIGNAL
+    SUB.L   d1,d0        ; 6 cycles for Dn.l->Dn.l
+    BNE.S   DELAY        ; 10 cycles for branch    
+    
+    JMP MAIN_OUTER_LOOP
 
 DUMMYHANDLER:
+    CLR.B ERR_SIGNAL
     BRA DUMMYHANDLER
     RTE
 
@@ -327,6 +344,7 @@ STACK:
 *~Font size~14~
 *~Tab type~1~
 *~Tab size~4~
+
 
 
 *~Font name~Courier New~

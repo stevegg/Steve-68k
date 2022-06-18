@@ -1,288 +1,235 @@
 00000500 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 2022-05-17 1:40:32 PM
+Created On: 2022-06-18 8:42:49 AM
 
-00000000                             1  ;
-00000000                             2  ; Homebrew 68k 68681 Test
-00000000                             3  ; Copyright (C) 2021 Neil Klingensmith.  All Rights Reserved.
-00000000                             4  ;
-00000000                             5  ; Permission is hereby granted, free of charge, to any person obtaining a copy of
-00000000                             6  ; this software and associated documentation files (the "Software"), to deal in
-00000000                             7  ; the Software without restriction, including without limitation the rights to
-00000000                             8  ; use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-00000000                             9  ; the Software, and to permit persons to whom the Software is furnished to do so,
-00000000                            10  ; subject to the following conditions:
-00000000                            11  ;
-00000000                            12  ; The above copyright notice and this permission notice shall be included in all
-00000000                            13  ; copies or substantial portions of the Software.
-00000000                            14  ;
-00000000                            15  ; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-00000000                            16  ; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-00000000                            17  ; FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-00000000                            18  ; COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-00000000                            19  ; IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-00000000                            20  ; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-00000000                            21  ;
-00000000                            22  ; https://neilklingensmith.com/teaching/68khomebrew/
-00000000                            23  ;
-00000000                            24  ; 1 tab == 4 spaces!
-00000000                            25  
-00000000                            26  
-00000000                            27  
-00000000                            28  
-00000000                            29      ; 68681 REGISTER DEFINITIONS
-00000000  =00100000                 30  USART_MRA        EQU $100000
-00000000  =00100001                 31  USART_SRA        EQU $100001
-00000000  =00100001                 32  USART_CSRA       EQU $100001
-00000000  =00100002                 33  USART_BRG_TEST   EQU $100002
-00000000  =00100002                 34  USART_CRA        EQU $100002
-00000000  =00100003                 35  USART_RHRA       EQU $100003
-00000000  =00100003                 36  USART_THRA       EQU $100003
-00000000  =00100004                 37  USART_IPCR       EQU $100004
-00000000  =00100004                 38  USART_ACR        EQU $100004
-00000000  =00100005                 39  USART_ISR        EQU $100005
-00000000  =00100005                 40  USART_IMR        EQU $100005
-00000000  =00100006                 41  USART_CTU        EQU $100006
-00000000  =00100006                 42  USART_CRUR       EQU $100006
-00000000  =00100007                 43  USART_CTL        EQU $100007
-00000000  =00100007                 44  USART_CTLR       EQU $100007
-00000000  =00100008                 45  USART_MRB        EQU $100008
-00000000  =00100009                 46  USART_SRB        EQU $100009
-00000000  =00100009                 47  USART_CSRB       EQU $100009
-00000000  =0010000A                 48  USART_1XTEST     EQU $10000A
-00000000  =0010000A                 49  USART_CRB        EQU $10000A
-00000000  =0010000B                 50  USART_RHRB       EQU $10000B
-00000000  =0010000B                 51  USART_THRB       EQU $10000B
-00000000  =0010000C                 52  USART_IVR        EQU $10000C
-00000000  =0010000D                 53  USART_IP         EQU $10000D
-00000000  =0010000D                 54  USART_OPCR       EQU $10000D
-00000000  =0010000E                 55  USART_START_CTR  EQU $10000E
-00000000  =0010000E                 56  USART_SOPBC      EQU $10000E
-00000000  =0010000F                 57  USART_STOP_CTR   EQU $10000F
-00000000  =0010000F                 58  USART_RESET_OP   EQU $10000F
-00000000                            59  
-00000000                            60      ORG 0
-00000000                            61  ; VECTOR TABLE
-00000000= 00100000                  62      DC.L STACK
-00000004= 00000500                  63      DC.L _START
-00000008= 00000616                  64      DC.L DUMMYHANDLER ; BUS ERROR
-0000000C= 00000616                  65      DC.L DUMMYHANDLER ; ADDRESS ERROR
-00000010= 00000616                  66      DC.L DUMMYHANDLER ; ILLEGAL INSTRUCTION
-00000014= 00000616                  67      DC.L DUMMYHANDLER ; DIVIDE BY ZERO
-00000018= 00000616                  68      DC.L DUMMYHANDLER ; CHK EXCEPTION
-0000001C= 00000616                  69      DC.L DUMMYHANDLER ; TRAPV
-00000020= 00000616                  70      DC.L DUMMYHANDLER ; PRIVILEGE VIOLATION
-00000024= 00000616                  71      DC.L DUMMYHANDLER ; TRACE
-00000028= 00000616                  72      DC.L DUMMYHANDLER ; LINE-A INSTRUCTION
-0000002C= 00000616                  73      DC.L DUMMYHANDLER ; LINE-F INSTRUCTION
-00000030= 00000616                  74      DC.L DUMMYHANDLER ; RESERVED
-00000034= 00000616                  75      DC.L DUMMYHANDLER ; CO-PROCESSOR PROTOCOL VIOLATION
-00000038= 00000616                  76      DC.L DUMMYHANDLER ; FORMAT ERROR
-0000003C= 00000616                  77      DC.L DUMMYHANDLER ; UNINITIALIZED INTERRUPT
-00000040= 00000616                  78      DC.L DUMMYHANDLER ; RESERVED
-00000044= 00000616                  79      DC.L DUMMYHANDLER ; RESERVED
-00000048= 00000616                  80      DC.L DUMMYHANDLER ; RESERVED
-0000004C= 00000616                  81      DC.L DUMMYHANDLER ; RESERVED
-00000050= 00000616                  82      DC.L DUMMYHANDLER ; RESERVED
-00000054= 00000616                  83      DC.L DUMMYHANDLER ; RESERVED
-00000058= 00000616                  84      DC.L DUMMYHANDLER ; RESERVED
-0000005C= 00000616                  85      DC.L DUMMYHANDLER ; RESERVED
-00000060= 00000616                  86      DC.L DUMMYHANDLER ; SPURIOUS INTERRUPT
-00000064= 00000616                  87      DC.L DUMMYHANDLER ; IRQ1
-00000068= 00000616                  88      DC.L DUMMYHANDLER ; IRQ2
-0000006C= 00000616                  89      DC.L DUMMYHANDLER ; IRQ3
-00000070= 00000616                  90      DC.L DUMMYHANDLER ; IRQ4
-00000074= 00000616                  91      DC.L DUMMYHANDLER ; IRQ5
-00000078= 00000616                  92      DC.L DUMMYHANDLER ; IRQ6
-0000007C= 00000616                  93      DC.L DUMMYHANDLER ; IRQ7
-00000080= 00000616                  94      DC.L DUMMYHANDLER ; TRAP 0
-00000084= 00000616                  95      DC.L DUMMYHANDLER ; TRAP 1
-00000088= 00000616                  96      DC.L DUMMYHANDLER ; TRAP 2
-0000008C= 00000616                  97      DC.L DUMMYHANDLER ; TRAP 3
-00000090= 00000616                  98      DC.L DUMMYHANDLER ; TRAP 4
-00000094= 00000616                  99      DC.L DUMMYHANDLER ; TRAP 5
-00000098= 00000616                 100      DC.L DUMMYHANDLER ; TRAP 6
-0000009C= 00000616                 101      DC.L DUMMYHANDLER ; TRAP 7
-000000A0= 00000616                 102      DC.L DUMMYHANDLER ; TRAP 8
-000000A4= 00000616                 103      DC.L DUMMYHANDLER ; TRAP 9
-000000A8= 00000616                 104      DC.L DUMMYHANDLER ; TRAP 10
-000000AC= 00000616                 105      DC.L DUMMYHANDLER ; TRAP 11
-000000B0= 00000616                 106      DC.L DUMMYHANDLER ; TRAP 12
-000000B4= 00000616                 107      DC.L DUMMYHANDLER ; TRAP 13
-000000B8= 00000616                 108      DC.L DUMMYHANDLER ; TRAP 14
-000000BC= 00000616                 109      DC.L DUMMYHANDLER ; TRAP 15
-000000C0                           110      
-00000500                           111      ORG $500
-00000500                           112  
-00000500                           113  _START:
-00000500                           114  
-00000500  2E7C 00100000            115      MOVEA.L #STACK,A7
-00000506                           116      
-00000506  6100 001A                117      BSR INIT_68681
-0000050A                           118  
-0000050A                           119  
-0000050A  4879 00000618            120      PEA WELCOME_MSG
-00000510  6100 00DC                121      BSR PUTS
-00000514                           122      
-00000514                           123  MAIN_LOOP:
-00000514                           124      ;PEA 'A'
-00000514                           125      ;BSR PUTC
-00000514                           126      ;ADDA.L #4,A7
-00000514  6100 00AE                127      BSR GETC
-00000518                           128      
-00000518  2F00                     129      MOVE.L D0,-(A7)
-0000051A  6100 007C                130      BSR PUTC
-0000051E  588F                     131      ADDA.L #4,A7
-00000520                           132      
-00000520  60F2                     133      BRA MAIN_LOOP
-00000522                           134  
-00000522                           135  INIT_68681:
-00000522  4E56 0000                136      LINK A6,#0
-00000526                           137      
-00000526  207C 00100000            138      MOVEA.L #USART_MRA,A0             ; SET UP BASE ADDRESS OF UART IN A0
-0000052C  117C 0020 0002           139      MOVE.B #$20, 2(A0)                ; CRA: RESET RECEIVER
-00000532  4E71                     140      NOP
-00000534  4E71                     141      NOP
-00000536  4E71                     142      NOP
-00000538  4E71                     143      NOP
-0000053A  4E71                     144      NOP
-0000053C  4E71                     145      NOP
-0000053E  117C 0030 0002           146      MOVE.B #$30, 2(A0)                ; CRA: RESET TRANSMITTER
-00000544  4E71                     147      NOP
-00000546  4E71                     148      NOP
-00000548  4E71                     149      NOP
-0000054A  4E71                     150      NOP
-0000054C  4E71                     151      NOP
-0000054E  4E71                     152      NOP
-00000550  117C 0040 0002           153      MOVE.B #$40, 2(A0)                ; CRA: RESET ERROR STATUS
-00000556  4E71                     154      NOP
-00000558  4E71                     155      NOP
-0000055A  4E71                     156      NOP
-0000055C  4E71                     157      NOP
-0000055E  4E71                     158      NOP
-00000560  4E71                     159      NOP
-00000562  117C 0010 0002           160      MOVE.B #$10, 2(A0)                ; CRA: RESET MODE REGISTER POINTER
-00000568  4E71                     161      NOP
-0000056A  4E71                     162      NOP
-0000056C  4E71                     163      NOP
-0000056E  4E71                     164      NOP
-00000570  4E71                     165      NOP
-00000572  4E71                     166      NOP
-00000574  10BC 0013                167      MOVE.B #$13,(A0)                  ; 8 DATA BITS, NO PARITY
-00000578  10BC 0007                168      MOVE.B #$07,(A0)                  ; NO FLOW CONTROL, 1 STOP BIT
-0000057C  117C 00CC 0001           169      MOVE.B #$CC,1(A0)                 ; SELECT 19.2 KBAUD
-00000582  117C 0005 0002           170      MOVE.B #$05,2(A0)                 ; CRA: ENABLE TX AND RX ON USART A
-00000588  117C 0010 0004           171      MOVE.B #$10,4(A0)                 ; SET ACR[7] = 0 FOR BAUD RATE GEN.
-0000058E  117C 0000 0005           172      MOVE.B #$00,5(A0)                 ; IMR: DISABLE INTERRUPTS
-00000594  4E5E                     173      UNLK A6
-00000596  4E75                     174      RTS
-00000598                           175  
-00000598                           176  ;
-00000598                           177  ; |-----------------------|
-00000598                           178  ; | CHARACTER TO TX       |
-00000598                           179  ; |-----------------------|
-00000598                           180  ; | RETURN ADDRESS        |
-00000598                           181  ; |-----------------------|
-00000598                           182  ; | CALLER'S LR           |
-00000598                           183  ; |-----------------------|
-00000598                           184  ;
-00000598                           185  PUTC:
-00000598  4E56 0000                186      LINK A6,#0
-0000059C  48E7 8080                187      MOVEM.L D0/A0,-(A7)
-000005A0                           188      
-000005A0  41F9 00100001            189      LEA USART_SRA,A0
-000005A6                           190  
-000005A6                           191  PUTC_LOOP:
-000005A6  1010                     192      MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
-000005A8  0280 00000004            193      ANDI.L #4,D0           ; CHECK IF TxRDYA BIT IS SET
-000005AE  67F6                     194      BEQ PUTC_LOOP          ; IF NOT, KEEP CHECKING
-000005B0                           195      
-000005B0  41F9 00100003            196      LEA USART_THRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
-000005B6  202E 0008                197      MOVE.L 8(A6),D0        ; GET CHARACTER TO SEND IN D0
-000005BA  1080                     198      MOVE.B D0,(A0)         ; SEND THE CHARACTER
-000005BC                           199      
-000005BC  4CDF 0101                200      MOVEM.L (A7)+,D0/A0
-000005C0  4E5E                     201      UNLK A6
-000005C2  4E75                     202      RTS
-000005C4                           203  
-000005C4                           204  ;
-000005C4                           205  ; |-----------------------|
-000005C4                           206  ; | CHARACTER TO TX       |
-000005C4                           207  ; |-----------------------|
-000005C4                           208  ; | RETURN ADDRESS        |
-000005C4                           209  ; |-----------------------|
-000005C4                           210  ; | CALLER'S LR           |
-000005C4                           211  ; |-----------------------|
-000005C4                           212  ;
-000005C4                           213  GETC:
-000005C4  4E56 0000                214      LINK A6,#0
-000005C8  2F08                     215      MOVE.L A0,-(A7)
-000005CA                           216  
-000005CA  41F9 00100001            217      LEA USART_SRA,A0
-000005D0                           218  
-000005D0                           219  GETC_LOOP:
-000005D0  1010                     220      MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
-000005D2  0280 00000001            221      ANDI.L #1,D0           ; CHECK IF RxRDYA BIT IS SET
-000005D8  67F6                     222      BEQ GETC_LOOP          ; IF NOT, KEEP CHECKING
-000005DA                           223      
-000005DA  41F9 00100003            224      LEA USART_RHRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
-000005E0  1010                     225      MOVE.B (A0),D0         ; SEND THE CHARACTER
-000005E2  0280 000000FF            226      ANDI.L #$FF,D0
-000005E8                           227  
-000005E8  205F                     228      MOVE.L (A7)+,A0
-000005EA  4E5E                     229      UNLK A6
-000005EC  4E75                     230      RTS
-000005EE                           231  
-000005EE                           232  ;
-000005EE                           233  ; |-----------------------|
-000005EE                           234  ; | STRING PTR            |
-000005EE                           235  ; |-----------------------|
-000005EE                           236  ; | RETURN ADDRESS        |
-000005EE                           237  ; |-----------------------|
-000005EE                           238  ; | CALLER'S LR           |
-000005EE                           239  ; |-----------------------|
-000005EE                           240  ;
-000005EE                           241  PUTS:
-000005EE  4E56 0000                242      LINK A6,#0
-000005F2  48E7 8080                243      MOVEM.L D0/A0,-(A7)
-000005F6                           244  
-000005F6  206E 0008                245      MOVE.L 8(A6),A0        ; GET CHARACTER TO SEND IN D0
-000005FA                           246      
-000005FA                           247  PUTS_LOOP:
-000005FA                           248  
-000005FA  1018                     249      MOVE.B (A0)+,D0
-000005FC  6700 0010                250      BEQ PUTS_DONE
-00000600  0280 000000FF            251      ANDI.L #$FF,D0
-00000606  2F00                     252      MOVE.L D0,-(A7)
-00000608  618E                     253      BSR PUTC
-0000060A  588F                     254      ADDA.L #4,A7
-0000060C  60EC                     255      BRA PUTS_LOOP
-0000060E                           256  
-0000060E                           257  PUTS_DONE:
-0000060E                           258  
-0000060E  4CDF 0101                259      MOVEM.L (A7)+,D0/A0
-00000612  4E5E                     260      UNLK A6
-00000614  4E75                     261      RTS
-00000616                           262  
-00000616                           263  
-00000616                           264  
-00000616                           265  DUMMYHANDLER:
-00000616                           266  
-00000616  4E73                     267      RTE
-00000618                           268      
-00000618                           269  
-00000618                           270  
-00000618                           271  WELCOME_MSG:
-00000618= 0D 0A 0D 0A              272      DC.B $D, $A, $D, $A
-0000061C= 57 45 4C 43 4F 4D ...    273      DC.B 'WELCOME TO 68K HOMEBREW!!', $D, $A, 0
-00000638                           274  
-00000638                           275  
-00000638                           276  
-00000638                           277  
-00100000                           278      ORG $100000
-00100000                           279  STACK:
-00100000                           280  
-00100000                           281      END _START
+00000000                             1      ; 68681 REGISTER DEFINITIONS
+00000000  =00100000                  2  USART_MRA        EQU $100000
+00000000  =00100001                  3  USART_SRA        EQU $100001
+00000000  =00100001                  4  USART_CSRA       EQU $100001
+00000000  =00100002                  5  USART_BRG_TEST   EQU $100002
+00000000  =00100002                  6  USART_CRA        EQU $100002
+00000000  =00100003                  7  USART_RHRA       EQU $100003
+00000000  =00100003                  8  USART_THRA       EQU $100003
+00000000  =00100004                  9  USART_IPCR       EQU $100004
+00000000  =00100004                 10  USART_ACR        EQU $100004
+00000000  =00100005                 11  USART_ISR        EQU $100005
+00000000  =00100005                 12  USART_IMR        EQU $100005
+00000000  =00100006                 13  USART_CTU        EQU $100006
+00000000  =00100006                 14  USART_CRUR       EQU $100006
+00000000  =00100007                 15  USART_CTL        EQU $100007
+00000000  =00100007                 16  USART_CTLR       EQU $100007
+00000000  =00100008                 17  USART_MRB        EQU $100008
+00000000  =00100009                 18  USART_SRB        EQU $100009
+00000000  =00100009                 19  USART_CSRB       EQU $100009
+00000000  =0010000A                 20  USART_1XTEST     EQU $10000A
+00000000  =0010000A                 21  USART_CRB        EQU $10000A
+00000000  =0010000B                 22  USART_RHRB       EQU $10000B
+00000000  =0010000B                 23  USART_THRB       EQU $10000B
+00000000  =0010000C                 24  USART_IVR        EQU $10000C
+00000000  =0010000D                 25  USART_IP         EQU $10000D
+00000000  =0010000D                 26  USART_OPCR       EQU $10000D
+00000000  =0010000E                 27  USART_START_CTR  EQU $10000E
+00000000  =0010000E                 28  USART_SOPBC      EQU $10000E
+00000000  =0010000F                 29  USART_STOP_CTR   EQU $10000F
+00000000  =0010000F                 30  USART_RESET_OP   EQU $10000F
+00000000                            31  
+00000000                            32      ORG 0
+00000000                            33  ; VECTOR TABLE
+00000000= 00100000                  34      DC.L STACK
+00000004= 00000500                  35      DC.L _START
+00000008= 000005E6                  36      DC.L DUMMYHANDLER ; BUS ERROR
+0000000C= 000005E6                  37      DC.L DUMMYHANDLER ; ADDRESS ERROR
+00000010= 000005E6                  38      DC.L DUMMYHANDLER ; ILLEGAL INSTRUCTION
+00000014= 000005E6                  39      DC.L DUMMYHANDLER ; DIVIDE BY ZERO
+00000018= 000005E6                  40      DC.L DUMMYHANDLER ; CHK EXCEPTION
+0000001C= 000005E6                  41      DC.L DUMMYHANDLER ; TRAPV
+00000020= 000005E6                  42      DC.L DUMMYHANDLER ; PRIVILEGE VIOLATION
+00000024= 000005E6                  43      DC.L DUMMYHANDLER ; TRACE
+00000028= 000005E6                  44      DC.L DUMMYHANDLER ; LINE-A INSTRUCTION
+0000002C= 000005E6                  45      DC.L DUMMYHANDLER ; LINE-F INSTRUCTION
+00000030= 000005E6                  46      DC.L DUMMYHANDLER ; RESERVED
+00000034= 000005E6                  47      DC.L DUMMYHANDLER ; CO-PROCESSOR PROTOCOL VIOLATION
+00000038= 000005E6                  48      DC.L DUMMYHANDLER ; FORMAT ERROR
+0000003C= 000005E6                  49      DC.L DUMMYHANDLER ; UNINITIALIZED INTERRUPT
+00000040= 000005E6                  50      DC.L DUMMYHANDLER ; RESERVED
+00000044= 000005E6                  51      DC.L DUMMYHANDLER ; RESERVED
+00000048= 000005E6                  52      DC.L DUMMYHANDLER ; RESERVED
+0000004C= 000005E6                  53      DC.L DUMMYHANDLER ; RESERVED
+00000050= 000005E6                  54      DC.L DUMMYHANDLER ; RESERVED
+00000054= 000005E6                  55      DC.L DUMMYHANDLER ; RESERVED
+00000058= 000005E6                  56      DC.L DUMMYHANDLER ; RESERVED
+0000005C= 000005E6                  57      DC.L DUMMYHANDLER ; RESERVED
+00000060= 000005E6                  58      DC.L DUMMYHANDLER ; SPURIOUS INTERRUPT
+00000064= 000005E6                  59      DC.L DUMMYHANDLER ; IRQ1
+00000068= 000005E6                  60      DC.L DUMMYHANDLER ; IRQ2
+0000006C= 000005E6                  61      DC.L DUMMYHANDLER ; IRQ3
+00000070= 000005E6                  62      DC.L DUMMYHANDLER ; IRQ4
+00000074= 000005E6                  63      DC.L DUMMYHANDLER ; IRQ5
+00000078= 000005E6                  64      DC.L DUMMYHANDLER ; IRQ6
+0000007C= 000005E6                  65      DC.L DUMMYHANDLER ; IRQ7
+00000080= 000005E6                  66      DC.L DUMMYHANDLER ; TRAP 0
+00000084= 000005E6                  67      DC.L DUMMYHANDLER ; TRAP 1
+00000088= 000005E6                  68      DC.L DUMMYHANDLER ; TRAP 2
+0000008C= 000005E6                  69      DC.L DUMMYHANDLER ; TRAP 3
+00000090= 000005E6                  70      DC.L DUMMYHANDLER ; TRAP 4
+00000094= 000005E6                  71      DC.L DUMMYHANDLER ; TRAP 5
+00000098= 000005E6                  72      DC.L DUMMYHANDLER ; TRAP 6
+0000009C= 000005E6                  73      DC.L DUMMYHANDLER ; TRAP 7
+000000A0= 000005E6                  74      DC.L DUMMYHANDLER ; TRAP 8
+000000A4= 000005E6                  75      DC.L DUMMYHANDLER ; TRAP 9
+000000A8= 000005E6                  76      DC.L DUMMYHANDLER ; TRAP 10
+000000AC= 000005E6                  77      DC.L DUMMYHANDLER ; TRAP 11
+000000B0= 000005E6                  78      DC.L DUMMYHANDLER ; TRAP 12
+000000B4= 000005E6                  79      DC.L DUMMYHANDLER ; TRAP 13
+000000B8= 000005E6                  80      DC.L DUMMYHANDLER ; TRAP 14
+000000BC= 000005E6                  81      DC.L DUMMYHANDLER ; TRAP 15
+000000C0                            82      
+00000500                            83      ORG $500
+00000500                            84  
+00000500                            85  _START:
+00000500                            86  
+00000500  2E7C 00100000             87      MOVEA.L #STACK,A7
+00000506                            88      
+00000506  6100 001A                 89      BSR INIT_68681
+0000050A                            90  
+0000050A  4879 000005E8             91      PEA WELCOME_MSG
+00000510  6100 00AC                 92      BSR PUTS
+00000514                            93      
+00000514                            94  MAIN_LOOP:
+00000514                            95      ;PEA 'A'
+00000514                            96      ;BSR PUTC
+00000514                            97      ;ADDA.L #4,A7
+00000514  6100 007E                 98      BSR GETC
+00000518                            99      
+00000518  2F00                     100      MOVE.L D0,-(A7)
+0000051A  6100 004C                101      BSR PUTC
+0000051E  588F                     102      ADDA.L #4,A7
+00000520                           103      
+00000520  60F2                     104      BRA MAIN_LOOP
+00000522                           105  
+00000522                           106  INIT_68681:
+00000522  4E56 0000                107      LINK A6,#0
+00000526                           108      
+00000526  207C 00100000            109      MOVEA.L #USART_MRA,A0             ; SET UP BASE ADDRESS OF UART IN A0
+0000052C  117C 0020 0002           110      MOVE.B #$20, 2(A0)                ; CRA: RESET RECEIVER
+00000532  117C 0030 0002           111      MOVE.B #$30, 2(A0)                ; CRA: RESET TRANSMITTER
+00000538  117C 0040 0002           112      MOVE.B #$40, 2(A0)                ; CRA: RESET ERROR STATUS
+0000053E  117C 0010 0002           113      MOVE.B #$10, 2(A0)                ; CRA: RESET MODE REGISTER POINTER
+00000544  10BC 0013                114      MOVE.B #$13,(A0)                  ; 8 DATA BITS, NO PARITY
+00000548  10BC 0007                115      MOVE.B #$07,(A0)                  ; NO FLOW CONTROL, 1 STOP BIT
+0000054C  117C 00CC 0001           116      MOVE.B #$CC,1(A0)                 ; SELECT 19.2 KBAUD
+00000552  117C 0005 0002           117      MOVE.B #$05,2(A0)                 ; CRA: ENABLE TX AND RX ON USART A
+00000558  117C 0010 0004           118      MOVE.B #$10,4(A0)                 ; SET ACR[7] = 0 FOR BAUD RATE GEN.
+0000055E  117C 0000 0005           119      MOVE.B #$00,5(A0)                 ; IMR: DISABLE INTERRUPTS
+00000564  4E5E                     120      UNLK A6
+00000566  4E75                     121      RTS
+00000568                           122  
+00000568                           123  ;
+00000568                           124  ; |-----------------------|
+00000568                           125  ; | CHARACTER TO TX       |
+00000568                           126  ; |-----------------------|
+00000568                           127  ; | RETURN ADDRESS        |
+00000568                           128  ; |-----------------------|
+00000568                           129  ; | CALLER'S LR           |
+00000568                           130  ; |-----------------------|
+00000568                           131  ;
+00000568                           132  PUTC:
+00000568  4E56 0000                133      LINK A6,#0
+0000056C  48E7 8080                134      MOVEM.L D0/A0,-(A7)
+00000570                           135      
+00000570  41F9 00100001            136      LEA USART_SRA,A0
+00000576                           137  
+00000576                           138  PUTC_LOOP:
+00000576  1010                     139      MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
+00000578  0280 00000004            140      ANDI.L #4,D0           ; CHECK IF TxRDYA BIT IS SET
+0000057E  67F6                     141      BEQ PUTC_LOOP          ; IF NOT, KEEP CHECKING
+00000580                           142      
+00000580  41F9 00100003            143      LEA USART_THRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
+00000586  202E 0008                144      MOVE.L 8(A6),D0        ; GET CHARACTER TO SEND IN D0
+0000058A  1080                     145      MOVE.B D0,(A0)         ; SEND THE CHARACTER
+0000058C                           146      
+0000058C  4CDF 0101                147      MOVEM.L (A7)+,D0/A0
+00000590  4E5E                     148      UNLK A6
+00000592  4E75                     149      RTS
+00000594                           150  
+00000594                           151  ;
+00000594                           152  ; |-----------------------|
+00000594                           153  ; | CHARACTER TO TX       |
+00000594                           154  ; |-----------------------|
+00000594                           155  ; | RETURN ADDRESS        |
+00000594                           156  ; |-----------------------|
+00000594                           157  ; | CALLER'S LR           |
+00000594                           158  ; |-----------------------|
+00000594                           159  ;
+00000594                           160  GETC:
+00000594  4E56 0000                161      LINK A6,#0
+00000598  2F08                     162      MOVE.L A0,-(A7)
+0000059A                           163  
+0000059A  41F9 00100001            164      LEA USART_SRA,A0
+000005A0                           165  
+000005A0                           166  GETC_LOOP:
+000005A0  1010                     167      MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
+000005A2  0280 00000001            168      ANDI.L #1,D0           ; CHECK IF RxRDYA BIT IS SET
+000005A8  67F6                     169      BEQ GETC_LOOP          ; IF NOT, KEEP CHECKING
+000005AA                           170      
+000005AA  41F9 00100003            171      LEA USART_RHRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
+000005B0  1010                     172      MOVE.B (A0),D0         ; SEND THE CHARACTER
+000005B2  0280 000000FF            173      ANDI.L #$FF,D0
+000005B8                           174  
+000005B8  205F                     175      MOVE.L (A7)+,A0
+000005BA  4E5E                     176      UNLK A6
+000005BC  4E75                     177      RTS
+000005BE                           178  
+000005BE                           179  ;
+000005BE                           180  ; |-----------------------|
+000005BE                           181  ; | STRING PTR            |
+000005BE                           182  ; |-----------------------|
+000005BE                           183  ; | RETURN ADDRESS        |
+000005BE                           184  ; |-----------------------|
+000005BE                           185  ; | CALLER'S LR           |
+000005BE                           186  ; |-----------------------|
+000005BE                           187  ;
+000005BE                           188  PUTS:
+000005BE  4E56 0000                189      LINK A6,#0
+000005C2  48E7 8080                190      MOVEM.L D0/A0,-(A7)
+000005C6                           191  
+000005C6  206E 0008                192      MOVE.L 8(A6),A0        ; GET CHARACTER TO SEND IN D0
+000005CA                           193      
+000005CA                           194  PUTS_LOOP:
+000005CA                           195  
+000005CA  1018                     196      MOVE.B (A0)+,D0
+000005CC  6700 0010                197      BEQ PUTS_DONE
+000005D0  0280 000000FF            198      ANDI.L #$FF,D0
+000005D6  2F00                     199      MOVE.L D0,-(A7)
+000005D8  618E                     200      BSR PUTC
+000005DA  588F                     201      ADDA.L #4,A7
+000005DC  60EC                     202      BRA PUTS_LOOP
+000005DE                           203  
+000005DE                           204  PUTS_DONE:
+000005DE                           205  
+000005DE  4CDF 0101                206      MOVEM.L (A7)+,D0/A0
+000005E2  4E5E                     207      UNLK A6
+000005E4  4E75                     208      RTS
+000005E6                           209  
+000005E6                           210  
+000005E6                           211  
+000005E6                           212  DUMMYHANDLER:
+000005E6                           213  
+000005E6  4E73                     214      RTE
+000005E8                           215      
+000005E8                           216  
+000005E8                           217  
+000005E8                           218  WELCOME_MSG:
+000005E8= 0D 0A 0D 0A              219      DC.B $D, $A, $D, $A
+000005EC= 57 45 4C 43 4F 4D ...    220      DC.B 'WELCOME TO 68K HOMEBREW!!', $D, $A, 0
+00000608                           221  
+00000608                           222  
+00000608                           223  
+00000608                           224  
+00100000                           225      ORG $100000
+00100000                           226  STACK:
+00100000                           227  
+00100000                           228      END _START
 
 No errors detected
 No warnings generated
@@ -291,16 +238,16 @@ No warnings generated
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-DUMMYHANDLER        616
-GETC                5C4
-GETC_LOOP           5D0
+DUMMYHANDLER        5E6
+GETC                594
+GETC_LOOP           5A0
 INIT_68681          522
 MAIN_LOOP           514
-PUTC                598
-PUTC_LOOP           5A6
-PUTS                5EE
-PUTS_DONE           60E
-PUTS_LOOP           5FA
+PUTC                568
+PUTC_LOOP           576
+PUTS                5BE
+PUTS_DONE           5DE
+PUTS_LOOP           5CA
 STACK               100000
 USART_1XTEST        10000A
 USART_ACR           100004
@@ -331,5 +278,5 @@ USART_START_CTR     10000E
 USART_STOP_CTR      10000F
 USART_THRA          100003
 USART_THRB          10000B
-WELCOME_MSG         618
+WELCOME_MSG         5E8
 _START              500

@@ -1,31 +1,3 @@
-;
-; Homebrew 68k 68681 Test
-; Copyright (C) 2021 Neil Klingensmith.  All Rights Reserved.
-;
-; Permission is hereby granted, free of charge, to any person obtaining a copy of
-; this software and associated documentation files (the "Software"), to deal in
-; the Software without restriction, including without limitation the rights to
-; use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
-; the Software, and to permit persons to whom the Software is furnished to do so,
-; subject to the following conditions:
-;
-; The above copyright notice and this permission notice shall be included in all
-; copies or substantial portions of the Software.
-;
-; THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-; IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-; FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-; COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-; IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-; CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-;
-; https://neilklingensmith.com/teaching/68khomebrew/
-;
-; 1 tab == 4 spaces!
-
-
-
-
     ; 68681 REGISTER DEFINITIONS
 USART_MRA        EQU $100000
 USART_SRA        EQU $100001
@@ -116,7 +88,6 @@ _START:
     
     BSR INIT_68681
 
-
     PEA WELCOME_MSG
     BSR PUTS
     
@@ -137,33 +108,9 @@ INIT_68681:
     
     MOVEA.L #USART_MRA,A0             ; SET UP BASE ADDRESS OF UART IN A0
     MOVE.B #$20, 2(A0)                ; CRA: RESET RECEIVER
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
     MOVE.B #$30, 2(A0)                ; CRA: RESET TRANSMITTER
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
     MOVE.B #$40, 2(A0)                ; CRA: RESET ERROR STATUS
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
     MOVE.B #$10, 2(A0)                ; CRA: RESET MODE REGISTER POINTER
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
-    NOP
     MOVE.B #$13,(A0)                  ; 8 DATA BITS, NO PARITY
     MOVE.B #$07,(A0)                  ; NO FLOW CONTROL, 1 STOP BIT
     MOVE.B #$CC,1(A0)                 ; SELECT 19.2 KBAUD
@@ -281,13 +228,6 @@ STACK:
     END _START
 
 
-
-
-
-*~Font name~Courier New~
-*~Font size~10~
-*~Tab type~1~
-*~Tab size~4~
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~

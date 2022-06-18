@@ -2,8 +2,8 @@
 * 68681 Duart Register Addresses
 *
 DUART       equ $100000         * DUART base address
-DUART_MRA   equ DUART+0         * Mode Register A           (R/W)
-DUART_MRA2  equ DUART+0         * Mode Register A           (R/W)
+DUART_MR1A  equ DUART+0         * Mode Register A           (R/W)
+DUART_MR2A  equ DUART+0         * Mode Register A           (R/W)
 DUART_SRA   equ DUART+1         * Status Register A         (r)
 DUART_CSRA  equ DUART+1         * Clock Select Register A   (w)
 DUART_CRA   equ DUART+2         * Commands Register A       (w)
@@ -12,7 +12,8 @@ DUART_TBA   equ DUART+3         * Transmitter Buffer A      (w)
 DUART_ACR   equ DUART+4         * Aux. Control Register     (R/W)
 DUART_ISR   equ DUART+5         * Interrupt Status Register (R)
 DUART_IMR   equ DUART+5         * Interrupt Mask Register   (W)
-DUART_MRB   equ DUART+8         * Mode Register B           (R/W)
+DUART_MR1B  equ DUART+8         * Mode Register B           (R/W)
+DUART_MR2B  equ DUART+8         * Mode Register B           (R/W)
 DUART_SRB   equ DUART+9         * Status Register B         (R)
 DUART_CSRB  equ DUART+9         * Clock Select Register B   (W)
 DUART_CRB   equ DUART+10        * Commands Register B       (W)
@@ -70,29 +71,6 @@ printString:
  .end:
     rts
     
-******
-* Print a hex byte
-*  - Takes byte in D0
-printHexByte:
-    move.l  D2, -(SP)
-    move.b  D0, D2
-    lsr.b   #$4, D0
-    add.b   #'0', D0
-    cmp.b   #'9', D0     * Check if the hex number was from 0-9
-    ble.s   .second
-    add.b   #7, D0       * Shift 0xA-0xF from ':' to 'A'
-.second:
-    bsr.s   outChar      * Print the digit
-    andi.b  #$0F, D2     * Now we want the lower digit Mask only the lower digit
-    add.b   #'0', D2
-    cmp.b   #'9', D2     * Same as before    
-    ble.s   .end
-    add.b   #7, D2
-.end:
-    move.b  D2, D0
-    bsr.s   outChar      * Print the lower digit
-    move.l  (SP)+, D2
-    rts
 
 *****
 * Writes a character to Port A, blocking if not ready (Full buffer)
@@ -114,35 +92,40 @@ inChar:
     move.b  DUART_RBA, d0       * Read Character into D0
     andi.b  #$7F, d0            * Clear MSb of character
     rts
+        
     
 *****
-* Initializes the 68681 DUART port A(1) to 19200 8N1 no RTS/CTS
-*
+* Initializes the 68681 DUART port A(1) as 9600 8N1
+
+ 
 initDuart:
 
-    move.b  #$30, DUART_CRA       * Reset Port A Transmitter   
-    move.b  #$20, DUART_CRA       * Reset Port A Receiver
-    move.b  #$10, DUART_CRA       * Reset Port A Mode Register Pointer
-    move.b  #$13, DUART_MRA       * No Parity 8 bits per character
-    move.b  #$07, DUART_MRA2      * Disable RTS, CTS and set 1 stop bit
-    move.b  #$00, DUART_ACR       * Select baud rate set 1
-    move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
-    move.b  #$03, DUART_IMR
-    move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
+    move.b #$20,DUART_CRA       ; reset receiver
+    move.b #$10,DUART_CRA       ; reset MR pointer to MRx1
+
+    move.b #$00,DUART_ACR       ; select BAUD rate set 1
+    move.b #$BB,DUART_CSRA      ; set TX & RX to 38400 BAUD (CC=38400, BB=9600)
+    move.b #$13,DUART_MR1A      ; set 8bits,no parity,character mode,RxRDY IRQ,RxRTS disabled
+    move.b #$07,DUART_MR2A      ; $07 Normal Mode,disable TxRTS & TxCTS,one Stop bit
+    move.b #$05,DUART_CRA       ; enable Receiver & Transmitter
     
-    move.b  DUART_RBA, D0         * Clear the FIFO buffer
+    move.b #$BB,DUART_CSRB      ; set TX & RX to 9600 BAUD
+    move.b #$13,DUART_MR1B      ; set 8bits,no parity,character mode,RxRDY IRQ,RxRTS disabled
+    move.b #$07,DUART_MR2B      ; $07 Normal Mode,disable TxRTS & TxCTS,one Stop bit
+    move.b #$05,DUART_CRB       ; enable Receiver & Transmitter
+    
+    move.b  DUART_RBA, D0       ; Clear the FIFO buffer
     move.b  DUART_RBA, D0
     move.b  DUART_RBA, D0
-    
     rts    
 
 **********************************
 * Strings
 *
 msgBanner:
-    dc.b CR,LF,'= Steve''s 68000 SBC =',CR,LF
-    dc.b       '======================',CR,LF
-    dc.b 'Serial Testing:', CR, LF, CR, LF, 0
+    dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
+    dc.b       '==================',CR,LF
+    dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
     
 msgNewline:
     dc.b CR,LF,0
@@ -157,10 +140,6 @@ STACK_START:
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~10~
