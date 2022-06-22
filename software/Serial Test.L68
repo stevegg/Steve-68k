@@ -1,6 +1,6 @@
 00000500 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 2022-05-19 8:05:07 AM
+Created On: 2022-06-21 5:31:16 PM
 
 00000000                             1  *********************************
 00000000                             2  * 68681 Duart Register Addresses
@@ -49,18 +49,18 @@ Created On: 2022-05-19 8:05:07 AM
 00000500                            45      ORG $500    
 00000500                            46  START:                  
 00000500  4FF9 00100000             47      lea     STACK_START, SP     * Set our stack pointer to be sure
-00000506  4EB9 00000588             48      jsr     initDuart           * Setup the serial port
-0000050C  41F9 000005E4             49      lea     msgBanner, A0       * Show our banner
+00000506  4EB9 0000055C             48      jsr     initDuart           * Setup the serial port
+0000050C  41F9 000005B0             49      lea     msgBanner, A0       * Show our banner
 00000512  6100 0014                 50      bsr.w   printString
 00000516                            51  loop:
-00000516  6100 0058                 52      bsr.w   inChar              * Read a character from the serial port into d0
-0000051A  6100 0042                 53      bsr.w   outChar             * Write the character to the serial port
+00000516  6100 002C                 52      bsr.w   inChar              * Read a character from the serial port into d0
+0000051A  6100 0016                 53      bsr.w   outChar             * Write the character to the serial port
 0000051E  4EF8 0516                 54      jmp loop
 00000522                            55      
 00000522                            56  ******
 00000522                            57  * Prints a newline (CR, LF)
 00000522                            58  printNewline:
-00000522  41F9 00000629             59      lea     msgNewline, a0
+00000522  41F9 00000606             59      lea     msgNewline, a0
 00000528                            60  ******
 00000528                            61  * Print a null terminated string
 00000528                            62  *
@@ -69,92 +69,69 @@ Created On: 2022-05-19 8:05:07 AM
 00000528  1018                      65      move.b  (a0)+, d0    * Read in character
 0000052A  6704                      66      beq.s   .end         * Check for the null
 0000052C                            67      
-0000052C  6130                      68      bsr.s   outChar      * Otherwise write the character
+0000052C  6104                      68      bsr.s   outChar      * Otherwise write the character
 0000052E  60F8                      69      bra.s   .loop        * And continue
 00000530                            70   .end:
 00000530  4E75                      71      rts
 00000532                            72      
-00000532                            73  ******
-00000532                            74  * Print a hex byte
-00000532                            75  *  - Takes byte in D0
-00000532                            76  printHexByte:
-00000532  2F02                      77      move.l  D2, -(SP)
-00000534  1400                      78      move.b  D0, D2
-00000536  E808                      79      lsr.b   #$4, D0
-00000538  0600 0030                 80      add.b   #'0', D0
-0000053C  B03C 0039                 81      cmp.b   #'9', D0     * Check if the hex number was from 0-9
-00000540  6F02                      82      ble.s   .second
-00000542  5E00                      83      add.b   #7, D0       * Shift 0xA-0xF from ':' to 'A'
-00000544                            84  .second:
-00000544  6118                      85      bsr.s   outChar      * Print the digit
-00000546  0202 000F                 86      andi.b  #$0F, D2     * Now we want the lower digit Mask only the lower digit
-0000054A  0602 0030                 87      add.b   #'0', D2
-0000054E  B43C 0039                 88      cmp.b   #'9', D2     * Same as before    
-00000552  6F02                      89      ble.s   .end
-00000554  5E02                      90      add.b   #7, D2
-00000556                            91  .end:
-00000556  1002                      92      move.b  D2, D0
-00000558  6104                      93      bsr.s   outChar      * Print the lower digit
-0000055A  241F                      94      move.l  (SP)+, D2
-0000055C  4E75                      95      rts
-0000055E                            96  
-0000055E                            97  *****
-0000055E                            98  * Writes a character to Port A, blocking if not ready (Full buffer)
-0000055E                            99  *  - Takes a character in D0
-0000055E                           100  outChar:
-0000055E  0839 0002 00100001       101      btst    #2, DUART_SRA       * Check if transmitter ready bit is set
-00000566  67F6                     102      beq     outChar             * Not ready, try again
-00000568  13C0 00100003            103      move.b  d0, DUART_TBA       * Transmit Character
-0000056E  4E75                     104      rts
-00000570                           105  
-00000570                           106  *****
-00000570                           107  * Reads in a character from Port A, blocking if none available
-00000570                           108  *  - Returns character in D0
-00000570                           109  *    
-00000570                           110  inChar:
-00000570  1039 00100001            111      move.b  DUART_SRA, d0       * Check if there's something to read
-00000576  0800 0000                112      btst.l  #0, d0              * RxRDY flag bit set?
-0000057A  67F4                     113      beq     inChar              * Nope, try again
-0000057C  1039 00100003            114      move.b  DUART_RBA, d0       * Read Character into D0
-00000582  0200 007F                115      andi.b  #$7F, d0            * Clear MSb of character
-00000586  4E75                     116      rts
-00000588                           117      
-00000588                           118  *****
-00000588                           119  * Initializes the 68681 DUART port A(1) to 19200 8N1 no RTS/CTS
-00000588                           120  *
-00000588                           121  initDuart:
-00000588                           122  
-00000588  13FC 0030 00100002       123      move.b  #$30, DUART_CRA       * Reset Port A Transmitter   
-00000590  13FC 0020 00100002       124      move.b  #$20, DUART_CRA       * Reset Port A Receiver
-00000598  13FC 0010 00100002       125      move.b  #$10, DUART_CRA       * Reset Port A Mode Register Pointer
-000005A0  13FC 0013 00100000       126      move.b  #$13, DUART_MRA       * No Parity 8 bits per character
-000005A8  13FC 0007 00100000       127      move.b  #$07, DUART_MRA2      * Disable RTS, CTS and set 1 stop bit
-000005B0  13FC 0000 00100004       128      move.b  #$00, DUART_ACR       * Select baud rate set 1
-000005B8  13FC 00CC 00100001       129      move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
-000005C0  13FC 0003 00100005       130      move.b  #$03, DUART_IMR
-000005C8  13FC 0005 00100002       131      move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
-000005D0                           132      
-000005D0  1039 00100003            133      move.b  DUART_RBA, D0         * Clear the FIFO buffer
-000005D6  1039 00100003            134      move.b  DUART_RBA, D0
-000005DC  1039 00100003            135      move.b  DUART_RBA, D0
-000005E2                           136      
-000005E2  4E75                     137      rts    
-000005E4                           138  
-000005E4                           139  **********************************
-000005E4                           140  * Strings
-000005E4                           141  *
-000005E4                           142  msgBanner:
-000005E4= 0D 0A 3D 20 53 74 ...    143      dc.b CR,LF,'= Steve''s 68000 SBC =',CR,LF
-000005FD= 3D 3D 3D 3D 3D 3D ...    144      dc.b       '======================',CR,LF
-00000615= 53 65 72 69 61 6C ...    145      dc.b 'Serial Testing:', CR, LF, CR, LF, 0
-00000629                           146      
-00000629                           147  msgNewline:
-00000629= 0D 0A 00                 148      dc.b CR,LF,0
-0000062C                           149  
-00100000                           150      ORG $100000
-00100000                           151  STACK_START:
-00100000                           152  
-00100000                           153      END    START            * last line of source
+00000532                            73  
+00000532                            74  *****
+00000532                            75  * Writes a character to Port A, blocking if not ready (Full buffer)
+00000532                            76  *  - Takes a character in D0
+00000532                            77  outChar:
+00000532  0839 0002 00100001        78      btst    #2, DUART_SRA       * Check if transmitter ready bit is set
+0000053A  67F6                      79      beq     outChar             * Not ready, try again
+0000053C  13C0 00100003             80      move.b  d0, DUART_TBA       * Transmit Character
+00000542  4E75                      81      rts
+00000544                            82  
+00000544                            83  *****
+00000544                            84  * Reads in a character from Port A, blocking if none available
+00000544                            85  *  - Returns character in D0
+00000544                            86  *    
+00000544                            87  inChar:
+00000544  1039 00100001             88      move.b  DUART_SRA, d0       * Check if there's something to read
+0000054A  0800 0000                 89      btst.l  #0, d0              * RxRDY flag bit set?
+0000054E  67F4                      90      beq     inChar              * Nope, try again
+00000550  1039 00100003             91      move.b  DUART_RBA, d0       * Read Character into D0
+00000556  0200 007F                 92      andi.b  #$7F, d0            * Clear MSb of character
+0000055A  4E75                      93      rts
+0000055C                            94          
+0000055C                            95      
+0000055C                            96  *****
+0000055C                            97  * Initializes the 68681 DUART port A(1) as 19200 8N1 
+0000055C                            98  initDuart:
+0000055C  13FC 0010 00100002        99      move.b  #$10, DUART_CRA       * Reset Mode Register Pointer
+00000564                           100      
+00000564  13FC 0000 00100004       101      MOVE.B  #$00, DUART_ACR
+0000056C  13FC 0013 00100000       102      move.b  #$13, DUART_MRA       * 8-bit, No Parity 8 bits
+00000574  13FC 0007 00100000       103      move.b  #$07, DUART_MRA2      * 1 Stop Bit    
+0000057C  13FC 00CC 00100001       104      move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
+00000584                           105  
+00000584  13FC 0020 00100002       106      move.b  #$20, DUART_CRA       * Reset Receiver
+0000058C  13FC 0030 00100002       107      move.b  #$30, DUART_CRA       * Reset Transmitter    
+00000594  13FC 0005 00100002       108      move.b  #$05, DUART_CRA       * Enable Transmit/Recieve
+0000059C                           109      
+0000059C  1039 00100003            110      move.b  DUART_RBA, D0         * Clear the FIFO buffer
+000005A2  1039 00100003            111      move.b  DUART_RBA, D0
+000005A8  1039 00100003            112      move.b  DUART_RBA, D0
+000005AE                           113      
+000005AE  4E75                     114      rts    
+000005B0                           115  
+000005B0                           116  **********************************
+000005B0                           117  * Strings
+000005B0                           118  *
+000005B0                           119  msgBanner:
+000005B0= 0D 0A 53 74 65 76 ...    120      dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
+000005C5= 3D 3D 3D 3D 3D 3D ...    121      dc.b       '==================',CR,LF
+000005D9= 54 79 70 65 20 61 ...    122      dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
+00000606                           123      
+00000606                           124  msgNewline:
+00000606= 0D 0A 00                 125      dc.b CR,LF,0
+00000609                           126  
+00100000                           127      ORG $100000
+00100000                           128  STACK_START:
+00100000                           129  
+00100000                           130      END    START            * last line of source
 
 No errors detected
 No warnings generated
@@ -190,16 +167,13 @@ DUART_SRB           100009
 DUART_TBA           100003
 DUART_TBB           10000B
 ESC                 1B
-INCHAR              570
-INITDUART           588
+INCHAR              544
+INITDUART           55C
 LF                  A
 LOOP                516
-MSGBANNER           5E4
-MSGNEWLINE          629
-OUTCHAR             55E
-PRINTHEXBYTE        532
-PRINTHEXBYTE:END    556
-PRINTHEXBYTE:SECOND  544
+MSGBANNER           5B0
+MSGNEWLINE          606
+OUTCHAR             532
 PRINTNEWLINE        522
 PRINTSTRING         528
 PRINTSTRING:END     530
