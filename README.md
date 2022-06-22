@@ -12,4 +12,4 @@ I'm building this to learn the fundamentals of microprocessors and their use in 
 This design **HEAVILLY** borrows from [Neil Klingensmith](https://neilklingensmith.com/teaching/68khomebrew/) whose explanations really helped me grasp some of the fundamentals.
 
 
-[![Schematic](/hardware/steve%2068k%20schematic.png?raw=true)](https://github.com/stevegg/Steve-68k/blob/master/hardware/Steve%2068k.pdf?raw=true)
+[![Schematic](/steve%2068k%20schematic.png?raw=true)](https://github.com/stevegg/Steve-68k/blob/master/Steve%2068k.pdf?raw=true)
