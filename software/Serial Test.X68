@@ -70,29 +70,6 @@ printString:
  .end:
     rts
     
-******
-* Print a hex byte
-*  - Takes byte in D0
-printHexByte:
-    move.l  D2, -(SP)
-    move.b  D0, D2
-    lsr.b   #$4, D0
-    add.b   #'0', D0
-    cmp.b   #'9', D0     * Check if the hex number was from 0-9
-    ble.s   .second
-    add.b   #7, D0       * Shift 0xA-0xF from ':' to 'A'
-.second:
-    bsr.s   outChar      * Print the digit
-    andi.b  #$0F, D2     * Now we want the lower digit Mask only the lower digit
-    add.b   #'0', D2
-    cmp.b   #'9', D2     * Same as before    
-    ble.s   .end
-    add.b   #7, D2
-.end:
-    move.b  D2, D0
-    bsr.s   outChar      * Print the lower digit
-    move.l  (SP)+, D2
-    rts
 
 *****
 * Writes a character to Port A, blocking if not ready (Full buffer)
@@ -114,21 +91,21 @@ inChar:
     move.b  DUART_RBA, d0       * Read Character into D0
     andi.b  #$7F, d0            * Clear MSb of character
     rts
+        
     
 *****
-* Initializes the 68681 DUART port A(1) to 19200 8N1 no RTS/CTS
-*
+* Initializes the 68681 DUART port A(1) as 19200 8N1 
 initDuart:
-
-    move.b  #$30, DUART_CRA       * Reset Port A Transmitter   
-    move.b  #$20, DUART_CRA       * Reset Port A Receiver
-    move.b  #$10, DUART_CRA       * Reset Port A Mode Register Pointer
-    move.b  #$13, DUART_MRA       * No Parity 8 bits per character
-    move.b  #$07, DUART_MRA2      * Disable RTS, CTS and set 1 stop bit
-    move.b  #$00, DUART_ACR       * Select baud rate set 1
+    move.b  #$10, DUART_CRA       * Reset Mode Register Pointer
+    
+    MOVE.B  #$00, DUART_ACR
+    move.b  #$13, DUART_MRA       * 8-bit, No Parity 8 bits
+    move.b  #$07, DUART_MRA2      * 1 Stop Bit    
     move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
-    move.b  #$03, DUART_IMR
-    move.b  #$05, DUART_CRA       * Enable Port A Transmit/Recieve
+
+    move.b  #$20, DUART_CRA       * Reset Receiver
+    move.b  #$30, DUART_CRA       * Reset Transmitter    
+    move.b  #$05, DUART_CRA       * Enable Transmit/Recieve
     
     move.b  DUART_RBA, D0         * Clear the FIFO buffer
     move.b  DUART_RBA, D0
@@ -140,9 +117,9 @@ initDuart:
 * Strings
 *
 msgBanner:
-    dc.b CR,LF,'= Steve''s 68000 SBC =',CR,LF
-    dc.b       '======================',CR,LF
-    dc.b 'Serial Testing:', CR, LF, CR, LF, 0
+    dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
+    dc.b       '==================',CR,LF
+    dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
     
 msgNewline:
     dc.b CR,LF,0
@@ -157,11 +134,6 @@ STACK_START:
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
