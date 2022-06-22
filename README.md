@@ -19,6 +19,7 @@ V20220621 was sent for fab on the evening of June 21, 2022.  This version's chan
 - Changed Serial connectors to standard FTDDI connector layout
 - Added RTS and CTS lines to Serial connector pulled from the IP and OP ports on the 68681
 - Fixed D0 label on BUS (was A0)
+- Added A17 and A18 to the GAL to allow for more fine grained address decoding
 - Other minor fixes
 
 Still having a problem with serial input....challenges are what make the victory sweeter I suppose.
