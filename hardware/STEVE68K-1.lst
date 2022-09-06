@@ -1,0 +1,76 @@
+LISTING FOR LOGIC DESCRIPTION FILE: STEVE68K-1.pld                   Page 1
+
+CUPL(WM): Universal Compiler for Programmable Logic
+Version 5.0a Serial# 60008009
+Copyright (c) 1983, 1998 Logical Devices, Inc.
+Created Sun Sep 04 18:53:02 2022
+
+  1:Name     Steve68k ;
+  2:PartNo   00 ;
+  3:Date     2022-05-31 ;
+  4:Revision 01 ;
+  5:Designer Steve Goyette ;
+  6:Company  .. ;
+  7:Assembly None ;
+  8:Location  ;
+  9:Device   g16v8a;
+ 10:
+ 11:/* *************** INPUT PINS *********************/
+ 12:PIN   1 = CLK;          /* CLK */
+ 13:PIN   2 = A19;          /* Address 19 */
+ 14:PIN   3 = A20;          /* Address 20 */
+ 15:PIN   4 = A21;          /* Address 21 */
+ 16:PIN   5 = AS;                   /* Address Strobe */
+ 17:PIN   6 = DTACK_UART;   /* UART DTACK Output */
+ 18:PIN   7 = DTACK_I2C;            /* I2C DTACK Output */
+ 19:PIN   8 = DTACK_USER;   /* User DTACK output */
+ 20:PIN   9 = USERSEL;              /* When LOW allows user selected DTACK */
+ 21:
+ 22:/* *************** OUTPUT PINS *********************/
+ 23:PIN  12 = ROMSEL;               /* When Low selects ROM */
+ 24:PIN  13 = RAMSEL;               /* When Low selects RAM */
+ 25:PIN  14 = UARTSEL;              /* When Low selects UART */
+ 26:PIN  15 = I2CSEL;               /* When Low selects I2C */
+ 27:PIN  16 = DTACK;                /* DTACK output to the CPU */
+ 28:
+ 29:/* IO Decoding.  LOTS of wasted space */
+ 30:field ioaddr = [A19, A20, A21];
+ 31:ROMeqn = ioaddr:[0..7FFFF];             /* 512k of ROM */
+ 32:RAMeqn = ioaddr:[80000..9FFFF]; /* 512k of RAM */
+ 33:UARTeqn = ioaddr:[100000..17FFFF];      /* 512k of UART....LOL */
+ 34:I2Ceqn = ioaddr:[180000..185000];       /* I2C Select */
+ 35:
+ 36:ROMSEL=!ROMeqn;
+ 37:RAMSEL=!RAMeqn;
+ 38:UARTSEL=!UARTeqn;
+ 39:I2CSEL=!I2Ceqn;
+ 40:
+ 41:FIELD INPUT = [AS, ROMSEL, RAMSEL, UARTSEL, I2CSEL]
+ 42:FIELD OUTPUT = [DTACK]
+        ^
+[0009ca] missing symbol:  ;
+ 43:TABLE INPUT => OUTPUT {
+ 44:'b'01000=>AS;
+ 45:'b'00100=>AS;
+             ^
+[0007ca] invalid syntax:  >
+ 46:'b'00010=>DTACK_UART;
+             ^
+[0007ca] invalid syntax:  >
+ 47:'b'00001=>DTACK_I2C;
+             ^
+[0007ca] invalid syntax:  >
+ 48:}
+    
+[0007ca] invalid syntax:  }
+ 49:
+ 50:/*
+ 51:DTACK=(!USERSEL&DTACK_USER)
+ 52:    # ((ROMeqn#RAMeqn)&AS)
+ 53:    # (UARTeqn&DTACK_UART)
+ 54:    # (I2Ceqn&DTACK_I2C);
+ 55:*/
+    
+[0007ca] invalid syntax:  *
+ 56:
+ 57:

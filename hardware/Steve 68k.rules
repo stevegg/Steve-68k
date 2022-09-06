@@ -11,7 +11,7 @@
     (via_costs 50)
     (plane_via_costs 5)
     (start_ripup_costs 100)
-    (start_pass_no 22873)
+    (start_pass_no 21473)
     (layer_rule F.Cu
       (active on)
       (preferred_direction horizontal)
@@ -53,22 +53,20 @@
     "kicad_default" "Via[0-1]_800:400_um-kicad_default"
   )
   (class default
-    GND VCC /A0 /A1 /A2 /A3 /A4 /A5
+    VCC GND /A0 /A1 /A2 /A3 /A4 /A5
     /A6 /A7 /A8 /A9 /A10 /A11 /A12 /A13
     /A14 /A15 /A16 /A17 /A18 /A19 /A20 /A21
     /D0 /D1 /D2 /D3 /D4 /D5 /D6 /D7
     /CLK /R~{W} /~{AS} /~{DS} /E /FC0 /FC1 /FC2
-    /~{RESET} /~{HALT} /~{BG} /~{IPL0} /~{IPL1} "Net-(D5-Pad2)" /~{I2CSEL} /~{USERSEL}
-    "/~{DTACK_USER}" /~{OE} "/~{RAM_WE}" "unconnected-(X1-Pad1)" "Net-(C12-Pad1)" "Net-(U1-Pad4)" "unconnected-(U1-Pad11)" "/68681_X1"
-    "/~{DTACK_CPU}" "unconnected-(U3-Pad18)" "unconnected-(U3-Pad19)" "unconnected-(U1-Pad8)" "unconnected-(U8-Pad5)" "unconnected-(U8-Pad6)" "unconnected-(U8-Pad8)" "/CLK_ONBOARD"
-    "/CLK_EXTERNAL" "unconnected-(J1-Pad57)" "Net-(D1-Pad2)" "Net-(D2-Pad2)" "Net-(D3-Pad2)" "Net-(D4-Pad2)" "unconnected-(J1-Pad58)" "/68681_Int"
-    /TxDA /RxDA /~{RAMSEL} /~{ROMSEL} /~{UARTSEL} /OP7 /OP6 /OP5
-    /OP4 /OP3 "/68681_X2" /OP1 "Net-(C13-Pad2)" /IP5 /IP4 /IP3
-    /IP2 /~{IPL2} "Net-(J2-Pad1)" /TxDB /RxDB "/~{DTACK_UART}" /~{BERR} "Net-(R7-Pad1)"
-    "unconnected-(U5-Pad1)" "unconnected-(U5-Pad12)" "unconnected-(U5-Pad23)" "unconnected-(U5-Pad34)" "Net-(R8-Pad1)" /DTRA "unconnected-(U5-Pad41)" "Net-(R9-Pad1)"
-    /~{BGACK} /~{BR} "unconnected-(J1-Pad59)" "unconnected-(J1-Pad60)" "unconnected-(J1-Pad61)" "unconnected-(J1-Pad62)" /CTSA /DTRB
-    /CTSB "Net-(R5-Pad1)" "Net-(R6-Pad1)" "/~{DTACK_I2C}" /RTSB /RTSA "Net-(D6-Pad2)" "Net-(D7-Pad2)"
-    /ERROR
+    /~{RESET} /~{HALT} /~{BG} /~{IPL0} /~{IPL1} "Net-(C1-Pad1)" "Net-(D1-Pad1)" "Net-(D2-Pad1)"
+    "unconnected-(J1-Pad2)" /~{OE} "/~{RAM_WE}" "unconnected-(X1-Pad1)" /SDA /SCL "unconnected-(J3-Pad25)" "unconnected-(J3-Pad26)"
+    "/~{DTACK_CPU}" "unconnected-(J3-Pad35)" "unconnected-(J3-Pad36)" "unconnected-(U1-Pad8)" "unconnected-(U8-Pad5)" "unconnected-(U8-Pad6)" "unconnected-(U8-Pad8)" "unconnected-(J3-Pad37)"
+    "unconnected-(J3-Pad38)" "unconnected-(J3-Pad39)" "Net-(D2-Pad2)" "unconnected-(J3-Pad40)" "unconnected-(J3-Pad41)" "unconnected-(J3-Pad45)" "unconnected-(J3-Pad52)" /~{AVRSEL}
+    "unconnected-(J3-Pad66)" /~{RAMSEL} /~{ROMSEL} /MISO /SCK /MOSI "unconnected-(J5-Pad1)" /TXD0
+    /RXD0 "unconnected-(J5-Pad5)" "/~{DTACK_AVR}" "Net-(U1-Pad2)" "unconnected-(U1-Pad4)" "unconnected-(U1-Pad6)" "unconnected-(U1-Pad10)" "unconnected-(U1-Pad12)"
+    /~{IPL2} /~{VPA} "unconnected-(U2-Pad8)" "unconnected-(U2-Pad11)" "unconnected-(U3-Pad7)" /~{BERR} "unconnected-(U3-Pad9)" "unconnected-(U3-Pad10)"
+    "unconnected-(U3-Pad11)" "unconnected-(U3-Pad12)" "unconnected-(U4-Pad7)" "unconnected-(U4-Pad9)" "unconnected-(U4-Pad12)" "/~{RAM_OE}" /~{BGACK} /~{BR}
+    "unconnected-(U7-Pad12)" /IPL0 /IPL1 /IPL2 "unconnected-(U7-Pad32)"
     (clearance_class default)
     (via_rule default)
     (rule

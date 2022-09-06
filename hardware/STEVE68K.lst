@@ -3,7 +3,7 @@ LISTING FOR LOGIC DESCRIPTION FILE: STEVE68K.pld                     Page 1
 CUPL(WM): Universal Compiler for Programmable Logic
 Version 5.0a Serial# 60008009
 Copyright (c) 1983, 1998 Logical Devices, Inc.
-Created Wed Jun 01 20:31:34 2022
+Created Sun Sep 04 18:52:44 2022
 
   1:Name     Steve68k ;
   2:PartNo   00 ;
@@ -56,5 +56,3 @@ Created Wed Jun 01 20:31:34 2022
 
 
 
-Jedec Fuse Checksum       (270b)
-Jedec Transmit Checksum   (abc3)
