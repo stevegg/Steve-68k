@@ -1,0 +1,55 @@
+Name     Steve68k ;
+PartNo   00 ;
+Date     2022-05-31 ;
+Revision 01 ;
+Designer Steve Goyette ;
+Company  .. ;
+Assembly None ;
+Location  ;
+Device   g16v8a;
+
+/* *************** INPUT PINS *********************/
+PIN   1 = CLK;		/* CLK */
+PIN   2 = A19;		/* Address 19 */
+PIN   3 = A20;		/* Address 20 */
+PIN   4 = A21;		/* Address 21 */
+PIN   5 = AS;			/* Address Strobe */
+PIN   6 = DTACK_UART;	/* UART DTACK Output */
+PIN   7 = DTACK_I2C;		/* I2C DTACK Output */
+PIN   8 = DTACK_USER;	/* User DTACK output */
+PIN   9 = USERSEL;		/* When LOW allows user selected DTACK */
+
+/* *************** OUTPUT PINS *********************/
+PIN  12 = ROMSEL;		/* When Low selects ROM */
+PIN  13 = RAMSEL;		/* When Low selects RAM */
+PIN  14 = UARTSEL;		/* When Low selects UART */
+PIN  15 = I2CSEL;		/* When Low selects I2C */
+PIN  16 = DTACK;		/* DTACK output to the CPU */
+
+/* IO Decoding.  LOTS of wasted space */
+field ioaddr = [A19, A20, A21];
+ROMeqn = ioaddr:[0..7FFFF];		/* 512k of ROM */
+RAMeqn = ioaddr:[80000..9FFFF];	/* 512k of RAM */
+UARTeqn = ioaddr:[100000..17FFFF];	/* 512k of UART....LOL */
+I2Ceqn = ioaddr:[180000..185000];	/* I2C Select */
+
+ROMSEL=!ROMeqn;
+RAMSEL=!RAMeqn;
+UARTSEL=!UARTeqn;
+I2CSEL=!I2Ceqn;
+
+FIELD INPUT = [AS, ROMSEL, RAMSEL, UARTSEL, I2CSEL]
+FIELD OUTPUT = [DTACK]
+TABLE INPUT => OUTPUT {
+'b'01000=>AS;
+'b'00100=>AS;
+'b'00010=>DTACK_UART;
+'b'00001=>DTACK_I2C;
+}
+
+/*
+DTACK=(!USERSEL&DTACK_USER)
+    # ((ROMeqn#RAMeqn)&AS)
+    # (UARTeqn&DTACK_UART)
+    # (I2Ceqn&DTACK_I2C);
+*/

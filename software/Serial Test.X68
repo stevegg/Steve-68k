@@ -96,20 +96,16 @@ inChar:
 *****
 * Initializes the 68681 DUART port A(1) as 19200 8N1 
 initDuart:
-    move.b  #$10, DUART_CRA       * Reset Mode Register Pointer
-    
-    MOVE.B  #$00, DUART_ACR
-    move.b  #$13, DUART_MRA       * 8-bit, No Parity 8 bits
-    move.b  #$07, DUART_MRA2      * 1 Stop Bit    
-    move.b  #$CC, DUART_CSRA      * Set Tx and Rx rates to 19200
+    move.b  #$30, DUART_CRA       * Reset Port A transmitter   
+    move.b  #$20, DUART_CRA       * Reset Port A receiver
+    move.b  #$10, DUART_CRA       * Reset Port A MR (mode register) pointer
 
-    move.b  #$20, DUART_CRA       * Reset Receiver
-    move.b  #$30, DUART_CRA       * Reset Transmitter    
-    move.b  #$05, DUART_CRA       * Enable Transmit/Recieve
-    
-    move.b  DUART_RBA, D0         * Clear the FIFO buffer
-    move.b  DUART_RBA, D0
-    move.b  DUART_RBA, D0
+    MOVE.B  #$80, DUART_ACR       * Select baud rate set 2    move.b  #$CC, DUART_CSRA      * Set both Rx, Tx speeds to 19200 baud
+    move.b  #$93, DUART_MRA       * Set port A to 8 bit character, no parity
+                                  * Enable RxRTS output using MRA
+    move.b  #$37, DUART_MRA2      * Select normal operating mode
+                                  * TxRTS, TxCTS, one stop bit using MR2A   
+    move.b  #$05, DUART_CRA       * Enable Port A transmitter and receiver
     
     rts    
 
@@ -134,6 +130,7 @@ STACK_START:
 *~Font size~10~
 *~Tab type~1~
 *~Tab size~4~
+
 *~Font name~Courier New~
 *~Font size~10~
 *~Tab type~1~
