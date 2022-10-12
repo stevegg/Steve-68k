@@ -19,44 +19,45 @@ Adafruit_7segment matrix = Adafruit_7segment();
 
 volatile boolean processBus = false;
 
-#define I2C_SEL_PIN   2
-#define I2C_DTACK     PINC6
-#define RW_PIN        PIND2
+#define SIGNAL_PORT     PORTC
+#define I2C_SEL_PIN     21
+#define I2CENABLE_PIN   PINC5
+#define DTACK_PIN       PINC6
+#define RW_PIN          PINC2
 
-#define DATA_PORT     PORTA
-#define ADDRESS_LOW   PORTC
+#define DATA_PORT       PORTB
+#define DATA_PIN        PINB
+#define ADDRESS_PORT    PORTA
+#define ADDRESS_PIN     PINA
 
 // Called whenever the I2C_SEL pin goes LOW
 void processBusInterruptHandler() {
-
   processBus = true;
-
 }
 
 void setup() {
 
   Serial.begin(9600);
 
-  // Setup Data Port initially as INPUT
+  // Setup Address Port as INPUT
   DDRA = 0x00;
-  // Setup Address Low as INPUT
-  DDRC &= ~((1<<PINC2) | (1<<PINC3) | (1<<PINC4) | (1<<PINC5));
+  // Setup Data Port initially as INPUT
+  DDRB = 0x00;
 
-  // I2C_DTACK is an OUTPUT
-  DDRC |= (1<<I2C_DTACK);
+  // DTACK_PIN is an OUTPUT
+  DDRC |= (1<<DTACK_PIN);
   // Set it's state to HI
-  PORTC |= (1<<I2C_DTACK);
+  SIGNAL_PORT |= (1<<DTACK_PIN);
 
-  // I2C_SEL is an INPUT
-  pinMode(I2C_SEL_PIN, INPUT);
-
-  // Setup an interrupt on the I2C_SEL pin
+  // I2CENABLE is an INPUT
+  DDRC &= ~(1<<I2CENABLE_PIN);
 
   matrix.begin(0x70);
   // Show Rdy on Display
   matrix.print("Rdy");
   matrix.writeDisplay();
 
+  // Setup an interrupt on the falling edge of I2CENABLE pin
   attachInterrupt(digitalPinToInterrupt(I2C_SEL_PIN), processBusInterruptHandler, FALLING);
 
   Serial.println("Initialization complete.");
@@ -66,11 +67,11 @@ void loop() {
 
   if ( processBus ) {
     // Check RW
-    bool reading = (PIND & (1<<RW_PIN)) == 1;
+    bool reading = (SIGNAL_PORT & (1<<RW_PIN)) == 1;
     char buffer[128];
     // Get the address
-    byte address = ADDRESS_LOW & ((1<<PINC2)|(1<<PINC3)|(1<<PINC4)|(1<<PINC5));
-    byte data = PINA;
+    byte address = ADDRESS_PIN;
+    byte data = DATA_PIN;
 
     sprintf(buffer, "SEL: %c %02X : %02X", (reading)?'R':'W', address, data);
     Serial.println(buffer);
@@ -90,10 +91,8 @@ void loop() {
 
     processBus = false;    
     // Now assert I2C_DTACK
-    PORTC &= ~(1<<I2C_DTACK);
+    SIGNAL_PORT &= ~(1<<DTACK_PIN);
     delayMicroseconds(10);
-    PORTC |= (1<<I2C_DTACK);
-
-
+    SIGNAL_PORT |= (1<<DTACK_PIN);
   }
 }
