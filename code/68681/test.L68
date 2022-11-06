@@ -1,0 +1,57 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-11-01 9:16:54 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000  =00E00000                  7  RAMBASE     equ     $E00000            ; Base address for RAM
+00000000  =00800000                  8  ROMTESTER   equ     $800000
+00000000  =00001000                  9  DELAYAMT    equ     $1000               ; Delay size
+00000000                            10  
+00001000                            11      ORG    $1000
+00001000                            12  START:                  ; first instruction of program
+00001000  41F9 00800000             13      lea.l   ROMTESTER,a0
+00001006                            14      
+00001006                            15  MAIN_OUTER_LOOP:
+00001006  103C 0000                 16      move.b  #$00,d0
+0000100A                            17      
+0000100A                            18  MAIN_LOOP:
+0000100A  B03C 00FF                 19      cmp.b   #$FF,d0     ; does D0 equal 10?
+0000100E  67F6                      20      beq     MAIN_OUTER_LOOP
+00001010  5240                      21      addi    #1,d0       ; increment D0
+00001012                            22      
+00001012                            23  DELAY:
+00001012  223C 00001000             24      move.l  #DELAYAMT,d1
+00001018  7401                      25      moveq.l #1,d2
+0000101A                            26  LOOP: 
+0000101A  9282                      27      sub.l   d2,d1       ; 6 cycles for Dn.l->Dn.l
+0000101C  66FC                      28      bne.s   LOOP        ; 10 cycles for branch    
+0000101E                            29      
+0000101E  60EA                      30      bra     MAIN_LOOP   ; go back and loop
+00001020                            31  
+00001020                            32  
+00001020                            33      ; SIMHALT             ; halt simulator
+00001020                            34  
+00001020                            35  * Put variables and constants here
+00001020                            36  
+00001020                            37      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DELAY               1012
+DELAYAMT            1000
+LOOP                101A
+MAIN_LOOP           100A
+MAIN_OUTER_LOOP     1006
+RAMBASE             E00000
+ROMTESTER           800000
+START               1000

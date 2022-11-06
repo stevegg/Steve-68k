@@ -1,0 +1,34 @@
+F00:0001           section .text
+F00:0002       
+F00:0003       TEST_ADDRES equ $E00000
+F00:0004       
+F00:0005       START:
+F00:0006       
+F00:0007 E0009     lea     #TEST_ADDRESS,A0
+F00:0008           jmp     *
+               S01:00000000:  60 FE
+
+
+Sections:
+S01  .text
+
+
+Sources:
+F00  test.asm
+
+
+Symbols:
+ *current pc dummy* LAB (0x0) INTERNAL PROT sec=.text 
+START LAB (0x0) UNUSED sec=.text 
+TEST_ADDRES EXPR(14680064=0xe00000) UNUSED EQU 
+_MOVEMBYTES EXPR(0=0x0) INTERNAL 
+ MOVEMSIZE EXPR(0=0x0) INTERNAL 
+_MOVEMREGS EXPR(0=0x0) INTERNAL 
+__LINE__ EXPR(8=0x8) INTERNAL 
+__FO EXPR(0=0x0) INTERNAL 
+__RS EXPR(0=0x0) INTERNAL 
+REPTN EXPR(-1=0xffffffff) INTERNAL 
+__VASM EXPR(2=0x2) INTERNAL 
+__UNIXFS EXPR(0=0x0) INTERNAL 
+
+There have been 1 errors!

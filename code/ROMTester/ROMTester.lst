@@ -1,0 +1,159 @@
+F00:0001       ; Steve 68k ROM Tester
+F00:0002       
+F00:0003       
+F00:0004       RAMBASE     equ     $E00000            ; Base address for RAM
+F00:0005       RAMLIMIT    equ     $E0F000            ; Limit of onboard RAM
+F00:0006       ROMBASE     equ     $000000            ; Base address for ROM space
+F00:0007       ROMTESTER   equ     $800000
+F00:0008       DELAYAMT    equ     $1000               ; Delay size
+F00:0009       
+F00:0010           section .text
+F00:0011       
+F00:0012       VECTORS:
+F00:0013           dc.l    RAMLIMIT                    ; 00: Stack (top of on-board RAM)
+               S01:00000000:  00 E0 F0 00
+F00:0014           dc.l    START                       ; 01: Initial PC (start of ROM code)
+               S01:00000004:  00 00 04 04 [R]
+F00:0015           dc.l    GENERIC_HANDLER             ; 02: Bus Error
+               S01:00000008:  00 00 04 24 [R]
+F00:0016       
+F00:0017           dc.l    GENERIC_HANDLER             ; 02: Bus Error
+               S01:0000000C:  00 00 04 24 [R]
+F00:0018           dc.l    GENERIC_HANDLER             ; 03: Address Error
+               S01:00000010:  00 00 04 24 [R]
+F00:0019           dc.l    GENERIC_HANDLER             ; 04: Illegal Instruction
+               S01:00000014:  00 00 04 24 [R]
+F00:0020           dc.l    GENERIC_HANDLER             ; 05: Divide by Zero
+               S01:00000018:  00 00 04 24 [R]
+F00:0021           dc.l    GENERIC_HANDLER             ; 06: CHK Instruction
+               S01:0000001C:  00 00 04 24 [R]
+F00:0022           dc.l    GENERIC_HANDLER             ; 07: TRAPV Instruction
+               S01:00000020:  00 00 04 24 [R]
+F00:0023           dc.l    GENERIC_HANDLER             ; 08: Privilege Violation
+               S01:00000024:  00 00 04 24 [R]
+F00:0024           dc.l    GENERIC_HANDLER             ; 09: Trace
+               S01:00000028:  00 00 04 24 [R]
+F00:0025           dc.l    GENERIC_HANDLER             ; 0A: Line 1010 Emulator
+               S01:0000002C:  00 00 04 24 [R]
+F00:0026           dc.l    GENERIC_HANDLER             ; 0B: Line 1111 Emulator
+               S01:00000030:  00 00 04 24 [R]
+F00:0027           dc.l    GENERIC_HANDLER             ; 0C: Reserved
+               S01:00000034:  00 00 04 24 [R]
+F00:0028           dc.l    GENERIC_HANDLER             ; 0D: Reserved
+               S01:00000038:  00 00 04 24 [R]
+F00:0029           dc.l    GENERIC_HANDLER             ; 0E: Format error (MC68010 Only)
+               S01:0000003C:  00 00 04 24 [R]
+F00:0030           dc.l    GENERIC_HANDLER             ; 0F: Uninitialized Vector
+               S01:00000040:  00 00 04 24 [R]
+F00:0031       
+F00:0032           dcb.l   8,GENERIC_HANDLER           ; 10-17: Reserved
+F00:0033       
+F00:0034           dc.l    GENERIC_HANDLER             ; 18: Spurious Interrupt
+               S01:00000064:  00 00 04 24 [R]
+F00:0035       
+F00:0036           dcb.l   7,GENERIC_HANDLER           ; 19-1F: Level 1-7 Autovectors
+F00:0037           dcb.l   13,GENERIC_HANDLER          ; 20-2C: TRAP Handlers (unused)
+F00:0038           dc.l    GENERIC_HANDLER             ; 2D: TRAP#13 handler (replaced later)
+               S01:000000B8:  00 00 04 24 [R]
+F00:0039           dc.l    GENERIC_HANDLER             ; 2E: TRAP#14 handler
+               S01:000000BC:  00 00 04 24 [R]
+F00:0040           dc.l    GENERIC_HANDLER             ; 2F: TRAP#15 handler (replaced later)
+               S01:000000C0:  00 00 04 24 [R]
+F00:0041           dcb.l   16,GENERIC_HANDLER          ; 30-3F: Remaining Reserved vectors
+F00:0042           dcb.l   4,GENERIC_HANDLER           ; 40-43: MFP GPIO #0-3 (Not used)
+F00:0043           dc.l    GENERIC_HANDLER             ; 44: MFP Timer D (Interrupt not used)
+               S01:00000114:  00 00 04 24 [R]
+F00:0044           dc.l    GENERIC_HANDLER             ; 45: MFP Timer C (System tick)
+               S01:00000118:  00 00 04 24 [R]
+F00:0045           dcb.l   2,GENERIC_HANDLER           ; 46-47: MFP GPIO #4-5 (Not used)
+F00:0046           dc.l    GENERIC_HANDLER             ; 48: MFP Timer B (Not used)
+               S01:00000124:  00 00 04 24 [R]
+F00:0047           dc.l    GENERIC_HANDLER             ; 49: Transmitter error (Not used)
+               S01:00000128:  00 00 04 24 [R]
+F00:0048           dc.l    GENERIC_HANDLER             ; 4A: Transmitter empty (Replaced later)
+               S01:0000012C:  00 00 04 24 [R]
+F00:0049           dc.l    GENERIC_HANDLER             ; 4B: Receiver error (Replaced later)
+               S01:00000130:  00 00 04 24 [R]
+F00:0050           dc.l    GENERIC_HANDLER             ; 4C: Receiver buffer full (Replaced later)
+               S01:00000134:  00 00 04 24 [R]
+F00:0051           dc.l    GENERIC_HANDLER             ; 4D: Timer A (Not used)
+               S01:00000138:  00 00 04 24 [R]
+F00:0052           dcb.l   2,GENERIC_HANDLER           ; 4E-4F: MFP GPIO #6-7 (Not used)
+F00:0053           dcb.l   176,GENERIC_HANDLER         ; 50-FF: Unused user vectors
+F00:0054       VECTORS_END:
+F00:0055       VECTORS_COUNT   equ     256
+F00:0056       
+F00:0057       START::
+F00:0058       
+F00:0059           lea.l   ROMTESTER,a0
+               S01:00000404:  41 F9 00 80 00 00
+F00:0060           jmp MAIN_OUTER_LOOP
+               S01:0000040A:  60 0C
+F00:0061       
+F00:0062       DELAY:
+F00:0063           move.l  #DELAYAMT,d1
+               S01:0000040C:  22 3C 00 00 10 00
+F00:0064           moveq.l #1,d2
+               S01:00000412:  74 01
+F00:0065       LOOP: 
+F00:0066           sub.l   d2,d1        ; 6 cycles for Dn.l->Dn.l
+               S01:00000414:  92 82
+F00:0067           bne.s   LOOP         ; 10 cycles for branch
+               S01:00000416:  66 FC
+F00:0068       
+F00:0069       MAIN_OUTER_LOOP:
+F00:0070           move.b  #$FF,d0         ; Set D0 to 00
+               S01:00000418:  10 3C 00 FF
+F00:0071       MAIN_LOOP:
+F00:0072           move.B  d0,(a0)        ; Copy D0 to the ROMTester address
+               S01:0000041C:  10 80
+F00:0073           jsr     DELAY    
+               S01:0000041E:  61 EC
+F00:0074           dbf     d0,MAIN_LOOP
+               S01:00000420:  51 C8 FF FA
+F00:0075           ; bra     MAIN_OUTER_LOOP ; reset
+F00:0076       
+F00:0077       
+F00:0078       ;------------------------------------------------------------
+F00:0079       ; Exception handlers   
+F00:0080       GENERIC_HANDLER::
+F00:0081           bra GENERIC_HANDLER
+               S01:00000424:  60 FE
+F00:0082           rte
+               S01:00000426:  4E 73
+
+
+Sections:
+S01  .text
+
+
+Sources:
+F00  ROMTester.asm
+
+
+Symbols:
+MAIN_LOOP LAB (0x41c) sec=.text 
+LOOP LAB (0x414) sec=.text 
+DELAY LAB (0x40c) sec=.text 
+MAIN_OUTER_LOOP LAB (0x418) sec=.text 
+VECTORS_COUNT EXPR(256=0x100) UNUSED EQU 
+VECTORS_END LAB (0x404) UNUSED sec=.text 
+GENERIC_HANDLER LAB (0x424) EXPORT REF sec=.text 
+START LAB (0x404) EXPORT REF sec=.text 
+VECTORS LAB (0x0) UNUSED sec=.text 
+DELAYAMT EXPR(4096=0x1000) EQU 
+ROMTESTER EXPR(8388608=0x800000) EQU 
+ROMBASE EXPR(0=0x0) UNUSED EQU 
+RAMLIMIT EXPR(14741504=0xe0f000) EQU 
+RAMBASE EXPR(14680064=0xe00000) UNUSED EQU 
+_MOVEMBYTES EXPR(0=0x0) INTERNAL 
+ MOVEMSIZE EXPR(0=0x0) INTERNAL 
+_MOVEMREGS EXPR(0=0x0) INTERNAL 
+__LINE__ EXPR(82=0x52) INTERNAL 
+__FO EXPR(0=0x0) INTERNAL 
+__RS EXPR(0=0x0) INTERNAL 
+REPTN EXPR(-1=0xffffffff) INTERNAL 
+__VASM EXPR(2=0x2) INTERNAL 
+__UNIXFS EXPR(0=0x0) INTERNAL 
+
+There have been no errors.
