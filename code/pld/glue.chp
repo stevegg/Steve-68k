@@ -1,0 +1,29 @@
+
+
+                                GAL22V10
+
+                          -------\___/-------
+                    RAMSL |  1           24 | VCC
+                          |                 |
+                    ROMSL |  2           23 | OE
+                          |                 |
+                     DUSL |  3           22 | RAMWE
+                          |                 |
+                     IOSL |  4           21 | DTACK
+                          |                 |
+                       AS |  5           20 | NC
+                          |                 |
+                       DS |  6           19 | NC
+                          |                 |
+                       RW |  7           18 | NC
+                          |                 |
+                    DTKDU |  8           17 | NC
+                          |                 |
+                       NC |  9           16 | NC
+                          |                 |
+                       NC | 10           15 | NC
+                          |                 |
+                       NC | 11           14 | NC
+                          |                 |
+                      GND | 12           13 | NC
+                          -------------------

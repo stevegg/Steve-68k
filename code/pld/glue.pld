@@ -1,0 +1,15 @@
+GAL22V10
+GLUE
+
+RAMSL ROMSL DUSL  IOSL  AS    DS    RW    DTKDU NC    NC    NC    GND
+NC    NC    NC    NC    NC    NC    NC    NC    DTACK RAMWE OE    VCC 
+
+/RAMWE = /RW * /DS
+/OE = RW * /DS
+/DTACK = /RAMSL * /AS +
+         /ROMSL * /AS +
+         /DUSL * /DTKDU
+
+DESCRIPTION
+
+Glue logic

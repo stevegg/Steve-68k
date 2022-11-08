@@ -1,0 +1,139 @@
+00000400 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-10-13 5:17:56 PM
+
+00000000                             1  ; DUART DEFINITIONS
+00000000  =00060000                  2  DUART   EQU $60000
+00000000  =00060000                  3  MRA     EQU DUART+0
+00000000  =00060000                  4  MRA2    EQU DUART+0
+00000000  =00060002                  5  SRA     EQU DUART+2
+00000000  =00060002                  6  CSRA    EQU DUART+2
+00000000  =00060004                  7  CRA     EQU DUART+4
+00000000  =00060006                  8  RBA     EQU DUART+6
+00000000  =00060006                  9  TBA     EQU DUART+6
+00000000  =00060008                 10  ACR     EQU DUART+8
+00000000  =0006000A                 11  ISR     EQU DUART+10
+00000000  =0006000A                 12  IMR     EQU DUART+10
+00000000                            13  
+00000000  =0000000A                 14  LF      equ $0A
+00000000  =0000000D                 15  CR      equ $0D
+00000000                            16  
+00000000                            17      ORG    $0000
+00000000                            18  
+00000000= 00020000                  19      DC.l    STACK_START         * Supervisor stack pointer
+00000004= 00000400                  20      DC.l    START               * Initial PC  
+00000008                            21  
+00000400                            22      ORG $400    
+00000400                            23  START:                  
+00000400  4FF9 00020000             24      lea     STACK_START, SP     * Set our stack pointer to be sure
+00000406  4EB9 00000454             25      jsr     initDuart           * Setup the serial port
+0000040C  41F9 00000496             26      lea     msgBanner, A0       * Show our banner
+00000412                            27  loop:
+00000412  6100 000C                 28      bsr.w   printString
+00000416                            29      ; bsr.l   inChar              * Read a character from the serial port into d0
+00000416                            30      ; bsr.l   outChar             * Write the character to the serial port
+00000416  4EF8 0412                 31      jmp loop
+0000041A                            32  
+0000041A                            33  ******
+0000041A                            34  * Prints a newline (CR, LF)
+0000041A                            35  printNewline:
+0000041A  41F9 000004EC             36      lea     msgNewline, a0
+00000420                            37  ******
+00000420                            38  * Print a null terminated string
+00000420                            39  *
+00000420                            40  printString:
+00000420                            41   .loop:
+00000420  1018                      42      move.b  (a0)+, d0    * Read in character
+00000422  6704                      43      beq.s   .end         * Check for the null
+00000424                            44      
+00000424  6104                      45      bsr.s   outChar      * Otherwise write the character
+00000426  60F8                      46      bra.s   .loop        * And continue
+00000428                            47   .end:
+00000428  4E75                      48      rts
+0000042A                            49  
+0000042A                            50  *****
+0000042A                            51  * Writes a character to Port A, blocking if not ready (Full buffer)
+0000042A                            52  *  - Takes a character in D0
+0000042A                            53  outChar:
+0000042A  0839 0002 00060002        54      btst    #2, SRA     * Check if transmitter ready bit is set
+00000432  67F6                      55      beq     outChar     * Not ready, try again
+00000434  13C0 00060006             56      move.b  d0, TBA     * Transmit Character
+0000043A  4E75                      57      rts
+0000043C                            58  
+0000043C                            59  *****
+0000043C                            60  * Reads in a character from Port A, blocking if none available
+0000043C                            61  *  - Returns character in D0
+0000043C                            62  *    
+0000043C                            63  inChar:
+0000043C  1039 00060002             64      move.b  SRA, d0     * Check if there's something to read
+00000442  0800 0000                 65      btst.l  #0, d0      * RxRDY flag bit set?
+00000446  67F4                      66      beq     inChar      * Nope, try again
+00000448  1039 00060006             67      move.b  RBA, d0     * Read Character into D0
+0000044E  0200 007F                 68      andi.b  #$7F, d0    * Clear MSb of character
+00000452  4E75                      69      rts    
+00000454                            70  
+00000454                            71  *****
+00000454                            72  * Initializes the 68681 DUART port A(1) as 19200 8N1 
+00000454                            73  initDuart:
+00000454  13FC 0030 00060004        74      move.b  #$30, CRA   * Reset Port A transmitter   
+0000045C  13FC 0020 00060004        75      move.b  #$20, CRA   * Reset Port A receiver
+00000464  13FC 0010 00060004        76      move.b  #$10, CRA   * Reset Port A MR (mode register) pointer
+0000046C                            77  
+0000046C  13FC 0080 00060008        78      MOVE.B  #$80, ACR   * Select baud rate set 2
+00000474  13FC 00CC 00060002        79      move.b  #$CC, CSRA  * Set both Rx, Tx speeds to 19200 baud
+0000047C  13FC 0093 00060000        80      move.b  #$93, MRA   * Set port A to 8 bit character, no parity
+00000484                            81                          * Enable RxRTS output using MRA
+00000484  13FC 0037 00060000        82      move.b  #$37, MRA2  * Select normal operating mode
+0000048C                            83                          * TxRTS, TxCTS, one stop bit using MR2A   
+0000048C  13FC 0005 00060004        84      move.b  #$05, CRA   * Enable Port A transmitter and receiver
+00000494                            85      
+00000494  4E75                      86      rts  
+00000496                            87  
+00000496                            88  **********************************
+00000496                            89  * Strings
+00000496                            90  *
+00000496                            91  msgBanner:
+00000496= 0D 0A 53 74 65 76 ...     92      dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
+000004AB= 3D 3D 3D 3D 3D 3D ...     93      dc.b       '==================',CR,LF
+000004BF= 54 79 70 65 20 61 ...     94      dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
+000004EC                            95      
+000004EC                            96  msgNewline:
+000004EC= 0D 0A 00                  97      dc.b CR,LF,0
+000004EF                            98  
+00020000                            99      ORG $20000
+00020000                           100  STACK_START:
+00020000                           101  
+00020000                           102      END    START            * last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ACR                 60008
+CR                  D
+CRA                 60004
+CSRA                60002
+DUART               60000
+IMR                 6000A
+INCHAR              43C
+INITDUART           454
+ISR                 6000A
+LF                  A
+LOOP                412
+MRA                 60000
+MRA2                60000
+MSGBANNER           496
+MSGNEWLINE          4EC
+OUTCHAR             42A
+PRINTNEWLINE        41A
+PRINTSTRING         420
+PRINTSTRING:END     428
+PRINTSTRING:LOOP    420
+RBA                 60006
+SRA                 60002
+STACK_START         20000
+START               400
+TBA                 60006

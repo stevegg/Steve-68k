@@ -1,0 +1,284 @@
+F00:0001       ; DUART DEFINITIONS
+F00:0002       ;                                RS4  RS3 RS2 RS1 0
+F00:0003       USART_MRA       EQU $60000    ;  0    0   0   0   0
+F00:0004       USART_SRA       EQU $60002    ;  0    0   0   1   0
+F00:0005       USART_CSRA      EQU $60004    ;  0    0   1   0   0
+F00:0006       USART_RBA       EQU $60006    ;  0    0   1   1   0
+F00:0007       USART_IPCR      EQU $60008    ;  0    1   0   0   0
+F00:0008       USART_ISR       EQU $6000A    ;  0    1   0   1   0
+F00:0009       USART_CUR       EQU $6000C    ;  0    1   1   0   0
+F00:0010       USART_CLR       EQU $6000E    ;  0    1   1   1   0
+F00:0011       USART_MRB       EQU $60010    ;  1    0   0   0   0
+F00:0012       USART_SRB       EQU $60012    ;  1    0   0   1   0
+F00:0013       USART_CSRB      EQU $60014    ;  1    0   1   0   0
+F00:0014       USART_RBB       EQU $60016    ;  1    0   1   1   0
+F00:0015       USART_IVR       EQU $60018    ;  1    1   0   0   0
+F00:0016       USART_IP        EQU $6001A    ;  1    1   0   1   0
+F00:0017       USART_SCC       EQU $6001C    ;  1    1   1   0   0
+F00:0018       USART_STCC      EQU $6001E    ;  1    1   1   1   0
+F00:0019       
+F00:0020           ; Start of ROM code
+F00:0021           ORG $0
+F00:0022       
+F00:0023       _START:
+F00:0024           MOVEA.L #STACK,A7
+               S01:00000000:  2E 7C 00 02 00 00
+F00:0025           
+F00:0026           BSR INIT_68681
+               S01:00000006:  61 14
+F00:0027       
+F00:0028       
+F00:0029           PEA WELCOME_MSG
+               S01:00000008:  48 78 00 E0
+F00:0030           BSR PUTS
+               S01:0000000C:  61 00 00 A8
+F00:0031       
+F00:0032       MAIN_LOOP:
+F00:0033           BSR GETC
+               S01:00000010:  61 7A
+F00:0034           
+F00:0035           MOVE.L D0,-(A7)
+               S01:00000012:  2F 00
+F00:0036           BSR PUTC
+               S01:00000014:  61 4A
+F00:0037           ADDA.L #4,A7
+               S01:00000016:  58 8F
+F00:0038           
+F00:0039           BRA MAIN_LOOP
+               S01:00000018:  60 F6
+F00:0040       
+F00:0041       INIT_68681:
+F00:0042           LINK A6,#0
+               S01:0000001A:  4E 56 00 00
+F00:0043           
+F00:0044           MOVEA.L #USART_MRA,A0             ; SET UP BASE ADDRESS OF UART IN A0
+               S01:0000001E:  20 7C 00 06 00 00
+F00:0045 E0010     MOVE.B #$20, 2(A0)                ; CRA: RESET RECEIVER
+               S01:00000024:  11 FC 00 20 FF FF
+F00:0046 E0010     MOVE.B #$30, 2(A0)                ; CRA: RESET TRANSMITTER
+               S01:0000002A:  11 FC 00 30 FF FF
+F00:0047 E0010     MOVE.B #$40, 2(A0)                ; CRA: RESET ERROR STATUS
+               S01:00000030:  11 FC 00 40 FF FF
+F00:0048 E0010     MOVE.B #$10, 2(A0)                ; CRA: RESET MODE REGISTER POINTER
+               S01:00000036:  11 FC 00 10 FF FF
+F00:0049           MOVE.B #$13,(A0)                  ; 8 DATA BITS, NO PARITY
+               S01:0000003C:  10 BC 00 13
+F00:0050           MOVE.B #$07,(A0)                  ; NO FLOW CONTROL, 1 STOP BIT
+               S01:00000040:  10 BC 00 07
+F00:0051           MOVE.B #$CC,1(A0)                 ; SELECT 19.2 KBAUD
+               S01:00000044:  11 7C 00 CC 00 01
+F00:0052           MOVE.B #$05,2(A0)                 ; CRA: ENABLE TX AND RX ON USART A
+               S01:0000004A:  11 7C 00 05 00 02
+F00:0053           MOVE.B #$10,4(A0)                 ; SET ACR[7] = 0 FOR BAUD RATE GEN.
+               S01:00000050:  11 7C 00 10 00 04
+F00:0054           MOVE.B #$00,5(A0)                 ; IMR: DISABLE INTERRUPTS
+               S01:00000056:  42 28 00 05
+F00:0055           UNLK A6
+               S01:0000005A:  4E 5E
+F00:0056           RTS    
+               S01:0000005C:  4E 75
+F00:0057       
+F00:0058       ;
+F00:0059       ; |-----------------------|
+F00:0060       ; | CHARACTER TO TX       |
+F00:0061       ; |-----------------------|
+F00:0062       ; | RETURN ADDRESS        |
+F00:0063       ; |-----------------------|
+F00:0064       ; | CALLER'S LR           |
+F00:0065       ; |-----------------------|
+F00:0066       ;
+F00:0067       PUTC:
+F00:0068           LINK A6,#0
+               S01:0000005E:  4E 56 00 00
+F00:0069           MOVEM.L D0/A0,-(A7)
+               S01:00000062:  48 E7 80 80
+F00:0070           
+F00:0071           LEA USART_SRA,A0
+               S01:00000066:  41 F9 00 06 00 02
+F00:0072       
+F00:0073       PUTC_LOOP:
+F00:0074           MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
+               S01:0000006C:  10 10
+F00:0075           ANDI.L #4,D0           ; CHECK IF TxRDYA BIT IS SET
+               S01:0000006E:  02 80 00 00 00 04
+F00:0076           BEQ PUTC_LOOP          ; IF NOT, KEEP CHECKING
+               S01:00000074:  67 F8
+F00:0077           
+F00:0078           LEA USART_THRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
+               S01:00000076:  41 F9 00 00 00 00 [R]
+F00:0079           MOVE.L 8(A6),D0        ; GET CHARACTER TO SEND IN D0
+               S01:0000007C:  20 2E 00 08
+F00:0080           MOVE.B D0,(A0)         ; SEND THE CHARACTER
+               S01:00000080:  10 80
+F00:0081           
+F00:0082           MOVEM.L (A7)+,D0/A0
+               S01:00000082:  4C DF 01 01
+F00:0083           UNLK A6
+               S01:00000086:  4E 5E
+F00:0084           RTS
+               S01:00000088:  4E 75
+F00:0085       
+F00:0086       ;
+F00:0087       ; |-----------------------|
+F00:0088       ; | CHARACTER TO TX       |
+F00:0089       ; |-----------------------|
+F00:0090       ; | RETURN ADDRESS        |
+F00:0091       ; |-----------------------|
+F00:0092       ; | CALLER'S LR           |
+F00:0093       ; |-----------------------|
+F00:0094       ;
+F00:0095       GETC:
+F00:0096           LINK A6,#0
+               S01:0000008A:  4E 56 00 00
+F00:0097           MOVE.L A0,-(A7)
+               S01:0000008E:  2F 08
+F00:0098       
+F00:0099           LEA USART_SRA,A0
+               S01:00000090:  41 F9 00 06 00 02
+F00:0100       
+F00:0101       GETC_LOOP:
+F00:0102           MOVE.B (A0),D0         ; GET VAL OF SRA IN D0
+               S01:00000096:  10 10
+F00:0103           ANDI.L #1,D0           ; CHECK IF RxRDYA BIT IS SET
+               S01:00000098:  02 80 00 00 00 01
+F00:0104           BEQ GETC_LOOP          ; IF NOT, KEEP CHECKING
+               S01:0000009E:  67 F8
+F00:0105           
+F00:0106           LEA USART_RHRA,A0      ; GET TRANSMIT HOLDING REG ADDR IN A0
+               S01:000000A0:  41 F9 00 00 00 00 [R]
+F00:0107           MOVE.B (A0),D0         ; SEND THE CHARACTER
+               S01:000000A6:  10 10
+F00:0108           ANDI.L #$FF,D0
+               S01:000000A8:  02 80 00 00 00 FF
+F00:0109       
+F00:0110           MOVE.L (A7)+,A0
+               S01:000000AE:  20 5F
+F00:0111           UNLK A6
+               S01:000000B0:  4E 5E
+F00:0112           RTS
+               S01:000000B2:  4E 75
+F00:0113       
+F00:0114       ;
+F00:0115       ; |-----------------------|
+F00:0116       ; | STRING PTR            |
+F00:0117       ; |-----------------------|
+F00:0118       ; | RETURN ADDRESS        |
+F00:0119       ; |-----------------------|
+F00:0120       ; | CALLER'S LR           |
+F00:0121       ; |-----------------------|
+F00:0122       ;
+F00:0123       PUTS:
+F00:0124           LINK A6,#0
+               S01:000000B4:  4E 56 00 00
+F00:0125           MOVEM.L D0/A0,-(A7)
+               S01:000000B8:  48 E7 80 80
+F00:0126       
+F00:0127           MOVE.L 8(A6),A0        ; GET CHARACTER TO SEND IN D0
+               S01:000000BC:  20 6E 00 08
+F00:0128           
+F00:0129       PUTS_LOOP:
+F00:0130       
+F00:0131           MOVE.B (A0)+,D0
+               S01:000000C0:  10 18
+F00:0132           BEQ PUTS_DONE
+               S01:000000C2:  67 10
+F00:0133           ANDI.L #$FF,D0
+               S01:000000C4:  02 80 00 00 00 FF
+F00:0134           MOVE.L D0,-(A7)
+               S01:000000CA:  2F 00
+F00:0135           BSR PUTC
+               S01:000000CC:  61 92
+F00:0136           ADDA.L #4,A7
+               S01:000000CE:  58 8F
+F00:0137           BRA PUTS_LOOP
+               S01:000000D0:  60 F0
+F00:0138       
+F00:0139       PUTS_DONE:
+F00:0140       
+F00:0141           MOVEM.L (A7)+,D0/A0
+               S01:000000D2:  4C DF 01 01
+F00:0142           UNLK A6
+               S01:000000D6:  4E 5E
+F00:0143           RTS    
+               S01:000000D8:  4E 75
+F00:0144       
+F00:0145       ; Dummy handler for all exceptions and interrupts etc...
+F00:0146       DUMMYHANDLER:
+F00:0147           BRA DUMMYHANDLER
+F00:0148           RTE
+               S01:000000DA:  4E 73
+F00:0149       
+F00:0150       WELCOME_MSG:
+F00:0151           DC.B $D, $A, $D, $A
+               S01:000000DC:  0D
+               S01:000000DD:  0A
+               S01:000000DE:  0D
+               S01:000000DF:  0A
+F00:0152           DC.B 'WELCOME TO 68K HOMEBREW!!', $D, $A, 0
+               S01:000000E0:  57 45 4C 43 4F 4D 45 20 54 4F 20 36 38 4B 20 48
+               S01:000000F0:  4F 4D 45 42 52 45 57 21 21
+               S01:000000F9:  0D
+               S01:000000FA:  0A
+               S01:000000FB:  00
+F00:0153       
+F00:0154           ; Start of RAM
+F00:0155           ORG $20000
+F00:0156       STACK:
+F00:0157           
+F00:0158           
+F00:0159           END _START
+
+
+Sections:
+S01  seg0
+S02  seg20000
+
+
+Sources:
+F00  SerialTest.asm
+
+
+Symbols:
+DUMMYHANDLER EXPR(220=0xdc) ABS 
+PUTS_DONE EXPR(212=0xd4) ABS 
+PUTS_LOOP EXPR(194=0xc2) ABS 
+USART_RHRA IMP REF 
+GETC_LOOP EXPR(152=0x98) ABS 
+USART_THRA IMP REF 
+PUTC_LOOP EXPR(110=0x6e) ABS 
+PUTC EXPR(96=0x60) ABS 
+GETC EXPR(140=0x8c) ABS 
+MAIN_LOOP EXPR(16=0x10) ABS 
+PUTS EXPR(182=0xb6) ABS 
+WELCOME_MSG EXPR(224=0xe0) ABS 
+INIT_68681 EXPR(28=0x1c) ABS 
+STACK EXPR(131072=0x20000) ABS 
+_START EXPR(0=0x0) UNUSED ABS 
+USART_STCC EXPR(393246=0x6001e) UNUSED EQU 
+USART_SCC EXPR(393244=0x6001c) UNUSED EQU 
+USART_IP EXPR(393242=0x6001a) UNUSED EQU 
+USART_IVR EXPR(393240=0x60018) UNUSED EQU 
+USART_RBB EXPR(393238=0x60016) UNUSED EQU 
+USART_CSRB EXPR(393236=0x60014) UNUSED EQU 
+USART_SRB EXPR(393234=0x60012) UNUSED EQU 
+USART_MRB EXPR(393232=0x60010) UNUSED EQU 
+USART_CLR EXPR(393230=0x6000e) UNUSED EQU 
+USART_CUR EXPR(393228=0x6000c) UNUSED EQU 
+USART_ISR EXPR(393226=0x6000a) UNUSED EQU 
+USART_IPCR EXPR(393224=0x60008) UNUSED EQU 
+USART_RBA EXPR(393222=0x60006) UNUSED EQU 
+USART_CSRA EXPR(393220=0x60004) UNUSED EQU 
+USART_SRA EXPR(393218=0x60002) EQU 
+USART_MRA EXPR(393216=0x60000) EQU 
+_MOVEMBYTES EXPR(8=0x8) INTERNAL 
+ MOVEMSIZE EXPR(4=0x4) INTERNAL 
+_MOVEMREGS EXPR(257=0x101) INTERNAL 
+__LINE__ EXPR(159=0x9f) INTERNAL 
+__FO EXPR(0=0x0) INTERNAL 
+__RS EXPR(0=0x0) INTERNAL 
+REPTN EXPR(-1=0xffffffff) INTERNAL 
+__VASM EXPR(2=0x2) INTERNAL 
+ROSCO_M68K EXPR(1=0x1) UNUSED 
+__UNIXFS EXPR(0=0x0) INTERNAL 
+
+There have been 4 errors!

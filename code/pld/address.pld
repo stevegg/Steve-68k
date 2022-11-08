@@ -1,0 +1,19 @@
+GAL22V10
+GLUE
+
+IACK AS     A13     A14    A15     A16   A17   A18   A19    A20     A21     GND
+NC   NC     NC      NC     NC      NC    NC    IOSL  DUSL   ROMSL   RAMSL   VCC    
+
+/ROMSL = IACK * /AS * /A17 * /A18 * /A19 
+/RAMSL = IACK * /AS * A17 * /A18 * /A19
+/DUSL = IACK * /AS * A17 * A18 * /A19
+/IOSL = IACK * /AS * A17 * A18 * A19
+
+DESCRIPTION
+
+Address Decoding
+
+ROM     (0x0000 - 0x1FFFF)
+RAM     (0x20000 - 0x5FFFF)
+DUART   (0x60000 - 0xDFFFF)
+IO      (0xE0000 - 0xFFFFF)

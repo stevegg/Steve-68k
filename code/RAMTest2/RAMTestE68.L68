@@ -1,0 +1,55 @@
+00001000 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-11-06 7:09:30 AM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000  =00E00000                  7  RAMBASE     equ     $E00000            ; Base address for RAM
+00000000  =00E0F000                  8  RAMLIMIT    equ     $E0F000            ; Limit of onboard RAM
+00000000  =00000000                  9  ROMBASE     equ     $000000            ; Base address for ROM space
+00000000  =00F00000                 10  ERRIND      equ     $F00000
+00000000  =00E0F000                 11  TESTLIMIT   equ     $E0F000
+00000000                            12  
+00001000                            13      ORG    $1000
+00001000                            14  START:                  ; first instruction of program
+00001000                            15  
+00001000                            16  MAIN_OUTER_LOOP:
+00001000                            17  
+00001000  41F9 00E00000             18      lea.l     RAMBASE,a0
+00001006                            19  
+00001006                            20  MAIN_LOOP:
+00001006                            21  
+00001006  4250                      22      clr.w   (a0)            ; Clear mem location
+00001008  4A58                      23      tst.w   (a0)+           ; Check if mem location reads as zero
+0000100A  6700 000A                 24      beq     MOVE_ON         ; If zero, assume write bus cycle succeeded
+0000100E  5348                      25      sub     #$01,a0
+00001010  4239 00F00000             26      clr.b   ERRIND
+00001016                            27      
+00001016                            28  MOVE_ON:
+00001016  B1FC 00E0F000             29      cmpa.l  #TESTLIMIT,a0
+0000101C  6D00 FFE8                 30      blt.w   MAIN_LOOP
+00001020  6000 FFDE                 31      bra.w   MAIN_OUTER_LOOP    
+00001024                            32  * Put variables and constants here
+00001024                            33  
+00001024                            34      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ERRIND              F00000
+MAIN_LOOP           1006
+MAIN_OUTER_LOOP     1000
+MOVE_ON             1016
+RAMBASE             E00000
+RAMLIMIT            E0F000
+ROMBASE             0
+START               1000
+TESTLIMIT           E0F000
