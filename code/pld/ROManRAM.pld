@@ -15,6 +15,7 @@ NC PPDTACK NC  NC NC   DTACK WR  EVNROM ODDROM  EVNRAM  ODDRAM  VCC
           + /ODDROM
           + /EVNRAM
           + /ODDRAM
+          
 DTACK.T   = GND
 DTACK.E   = /PPDTACK
 
