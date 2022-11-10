@@ -1,0 +1,116 @@
+00000400 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-11-09 2:26:47 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7      ORG    $0000
+00000000                             8  
+00000000                             9  ; Steve 68k ROM Tester
+00000000                            10  
+00000000                            11  
+00000000  =00E00000                 12  RAMBASE     equ     $E00000            ; Base address for RAM
+00000000  =00E0F000                 13  RAMLIMIT    equ     $E0F000            ; Limit of onboard RAM
+00000000  =00000000                 14  ROMBASE     equ     $000000            ; Base address for ROM space
+00000000  =00800000                 15  ROMTESTER   equ     $800000
+00000000  =00000500                 16  DELAYAMT    equ     $0500               ; Delay size
+00000000                            17  
+00000000                            18  VECTORS:
+00000000= 00E0F000                  19      dc.l    RAMLIMIT                    ; 00: Stack (top of on-board RAM)
+00000004= 00000400                  20      dc.l    START                       ; 01: Initial PC (start of ROM code)
+00000008                            21  DC.L
+00000008                            22  
+00000008= 00000422                  23      DC.L    GENERIC_HANDLER             ; 02: Bus Error
+0000000C= 00000422                  24      DC.L    GENERIC_HANDLER             ; 03: Address Error
+00000010= 00000422                  25      DC.L    GENERIC_HANDLER             ; 04: Illegal Instruction
+00000014= 00000422                  26      DC.L    GENERIC_HANDLER             ; 05: Divide by Zero
+00000018= 00000422                  27      DC.L    GENERIC_HANDLER             ; 06: CHK Instruction
+0000001C= 00000422                  28      DC.L    GENERIC_HANDLER             ; 07: TRAPV Instruction
+00000020= 00000422                  29      DC.L    GENERIC_HANDLER             ; 08: Privilege Violation
+00000024= 00000422                  30      DC.L    GENERIC_HANDLER             ; 09: Trace
+00000028= 00000422                  31      DC.L    GENERIC_HANDLER             ; 0A: Line 1010 Emulator
+0000002C= 00000422                  32      DC.L    GENERIC_HANDLER             ; 0B: Line 1111 Emulator
+00000030= 00000422                  33      DC.L    GENERIC_HANDLER             ; 0C: Reserved
+00000034= 00000422                  34      DC.L    GENERIC_HANDLER             ; 0D: Reserved
+00000038= 00000422                  35      DC.L    GENERIC_HANDLER             ; 0E: Format error (MC68010 Only)
+0000003C= 00000422                  36      DC.L    GENERIC_HANDLER             ; 0F: Uninitialized Vector
+00000040                            37  
+00000040= 00000422 00000422 ...     38      DCB.L   8,GENERIC_HANDLER           ; 10-17: Reserved
+00000060                            39  
+00000060= 00000422                  40      DC.L    GENERIC_HANDLER             ; 18: Spurious Interrupt
+00000064                            41  
+00000064= 00000422 00000422 ...     42      DCB.L   7,GENERIC_HANDLER           ; 19-1F: Level 1-7 Autovectors
+00000080= 00000422 00000422 ...     43      DCB.L   13,GENERIC_HANDLER          ; 20-2C: TRAP Handlers (unused)
+000000B4= 00000422                  44      DC.L    GENERIC_HANDLER             ; 2D: TRAP#13 handler (replaced later)
+000000B8= 00000422                  45      DC.L    GENERIC_HANDLER             ; 2E: TRAP#14 handler
+000000BC= 00000422                  46      DC.L    GENERIC_HANDLER             ; 2F: TRAP#15 handler (replaced later)
+000000C0= 00000422 00000422 ...     47      DCB.L   16,GENERIC_HANDLER          ; 30-3F: Remaining Reserved vectors
+00000100= 00000422 00000422 ...     48      DCB.L   4,GENERIC_HANDLER           ; 40-43: MFP GPIO #0-3 (Not used)
+00000110= 00000422                  49      DC.L    GENERIC_HANDLER             ; 44: MFP Timer D (Interrupt not used)
+00000114= 00000422                  50      DC.L    GENERIC_HANDLER             ; 45: MFP Timer C (System tick)
+00000118= 00000422 00000422         51      DCB.L   2,GENERIC_HANDLER           ; 46-47: MFP GPIO #4-5 (Not used)
+00000120= 00000422                  52      DC.L    GENERIC_HANDLER             ; 48: MFP Timer B (Not used)
+00000124= 00000422                  53      DC.L    GENERIC_HANDLER             ; 49: Transmitter error (Not used)
+00000128= 00000422                  54      DC.L    GENERIC_HANDLER             ; 4A: Transmitter empty (Replaced later)
+0000012C= 00000422                  55      DC.L    GENERIC_HANDLER             ; 4B: Receiver error (Replaced later)
+00000130= 00000422                  56      DC.L    GENERIC_HANDLER             ; 4C: Receiver buffer full (Replaced later)
+00000134= 00000422                  57      DC.L    GENERIC_HANDLER             ; 4D: Timer A (Not used)
+00000138= 00000422 00000422         58      DCB.L   2,GENERIC_HANDLER           ; 4E-4F: MFP GPIO #6-7 (Not used)
+00000140= 00000422 00000422 ...     59      DCB.L   176,GENERIC_HANDLER         ; 50-FF: Unused user vectors
+00000400                            60  VECTORS_END:
+00000400  =00000100                 61  VECTORS_COUNT   equ     256    
+00000400                            62      
+00000400                            63  START:                  ; first instruction of program
+00000400                            64  
+00000400  41F9 00800000             65      lea.l   ROMTESTER,a0
+00000406                            66      
+00000406                            67  MAIN_OUTER_LOOP:
+00000406  303C 0000                 68      move.w  #$0000,d0
+0000040A                            69      
+0000040A                            70  MAIN_LOOP:
+0000040A  3080                      71      move.w  d0,(a0)
+0000040C  B07C FFFF                 72      cmp.w   #$FFFF,d0     ; does D0 equal 10?
+00000410  67F4                      73      beq     MAIN_OUTER_LOOP
+00000412  5240                      74      addi    #1,d0       ; increment D0
+00000414                            75      
+00000414                            76  DELAY:
+00000414  223C 00000500             77      move.l  #DELAYAMT,d1
+0000041A  7401                      78      moveq.l #1,d2
+0000041C                            79      
+0000041C                            80  LOOP: 
+0000041C  9282                      81      sub.l   d2,d1       ; 6 cycles for Dn.l->Dn.l
+0000041E  66FC                      82      bne.s   LOOP        ; 10 cycles for branch    
+00000420  60E8                      83      bra     MAIN_LOOP   ; go back and loop
+00000422                            84      
+00000422                            85  GENERIC_HANDLER:
+00000422  60FE                      86      bra GENERIC_HANDLER
+00000424  4E73                      87      rte    
+00000426                            88  
+00000426                            89      END    START        ; last line of source
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+DC.L                8
+DELAY               414
+DELAYAMT            500
+GENERIC_HANDLER     422
+LOOP                41C
+MAIN_LOOP           40A
+MAIN_OUTER_LOOP     406
+RAMBASE             E00000
+RAMLIMIT            E0F000
+ROMBASE             0
+ROMTESTER           800000
+START               400
+VECTORS             0
+VECTORS_COUNT       100
+VECTORS_END         400

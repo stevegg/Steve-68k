@@ -1,0 +1,10 @@
+GAL22V10
+CPU Decode
+
+CLK     A3      A2      A1      FC0     FC1     FC2     RESET   NC      NC      NC      GND
+NC      NC      NC      NC      NC      NC      NC      NC      HALT    NC      IACK     VCC
+
+HALT.T = GND
+HALT.E = /RESET
+
+DESCRIPTION

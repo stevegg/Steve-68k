@@ -7,17 +7,19 @@ NC      NC     PPDTACK  WRITE   READ    BUSDIR  TSSLLO TSSLHI  DTACK   VCC
 
 /TSSLLO = A23 * /A22 * /A21 * /A20 * /LDS
 /TSSLHI = A23 * /A22 * /A21 * /A20 * /UDS
-/BUSDIR = RW
+BUSDIR = /RW
 READ = RW
 WRITE = /RW
 
 PPDTACK = /TSSLLO + /TSSLHI
 
-DTACK.T = RW
+DTACK.T = GND
 DTACK.E = PPDTACK
 
 DESCRIPTION
 Address Decoding
+
+BUSDIR = positive if RW is negative
 
 ROM     (0x0000 - 0x1FFFF)
 RAM     (0x20000 - 0x5FFFF)

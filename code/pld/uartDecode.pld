@@ -2,19 +2,12 @@ GAL16V8
 GLUE
 
 UDS  LDS    RW     AS    A23    A22   A21   A20   DTKURT    GND
-NC   DTACK  URTSEL NC    NC     NC    NC    NC    NC        VCC
+NC   NC     NC     NC    NC     NC    NC    NC    URTSEL    VCC
 
 
-/URTSEL = A23 * A22 * A21 * /A20 * /LDS
-
-DTACK.T = /DTKURT
-DTACK.E = A23 * A22 * A21 * /A20 * /LDS
-
+/URTSEL = A23 * A22 * A21 * A20 * /UDS
 
 DESCRIPTION
 Address Decoding
 
-ROM     (0x0000 - 0x1FFFF)
-RAM     (0x20000 - 0x5FFFF)
-IO      (0xE0000 - 0xFFFFF)
-DUART   (0x100000 - 0x10FFFF)
+Duart at 0xF00000

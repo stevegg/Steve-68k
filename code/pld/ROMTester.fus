@@ -2,7 +2,7 @@
 
 Pin 19 = DTACK        XOR = 1   AC1 = 1
   0  ---- ---- ---- ---- ---- ---- --x- ----
-  1  ---- x--- ---- ---- ---- ---- ---- ----
+  1  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
   2  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
   3  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
   4  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -30,9 +30,9 @@ Pin 17 = TSSLLO       XOR = 0   AC1 = 1
  22  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  23  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
 
-Pin 16 = BUSDIR       XOR = 0   AC1 = 1
+Pin 16 = BUSDIR       XOR = 1   AC1 = 1
  24  ---- ---- ---- ---- ---- ---- ---- ----
- 25  ---- x--- ---- ---- ---- ---- ---- ----
+ 25  ---- -x-- ---- ---- ---- ---- ---- ----
  26  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  27  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  28  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
