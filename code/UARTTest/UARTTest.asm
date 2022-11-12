@@ -8,7 +8,7 @@ RAMLIMIT    equ     $F00000     ; Limit of onboard RAM
 DUART       equ     $F00001     ; DUART memory location
 
 ;***************************************************************************
-; 68681 Duart Register Addresses
+; 68681 Duart Register Addresses 
 ;
 
 MRA         EQU DUART           ; Mode Register Port A
