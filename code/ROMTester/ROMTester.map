@@ -6,7 +6,7 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD UARTTest.o
+LOAD ROMTester.o
                 [!provide]                        PROVIDE (__executable_start = SEGMENT_START ("text-segment", 0x80000000))
                 0x0000000080000054                . = (SEGMENT_START ("text-segment", 0x80000000) + SIZEOF_HEADERS)
 
@@ -65,13 +65,14 @@ LOAD UARTTest.o
 .iplt
  *(.iplt)
 
-.text
+.text           0x0000000080000054      0x42a
  *(.text.unlikely .text.*_unlikely .text.unlikely.*)
  *(.text.exit .text.exit.*)
  *(.text.startup .text.startup.*)
  *(.text.hot .text.hot.*)
  *(SORT_BY_NAME(.text.sorted.*))
  *(.text .stub .text.* .gnu.linkonce.t.*)
+ .text          0x0000000080000054      0x42a ROMTester.o
  *(.gnu.warning)
 
 .fini
@@ -102,7 +103,7 @@ LOAD UARTTest.o
 
 .exception_ranges
  *(.exception_ranges*)
-                0x0000000080002054                . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE))
+                0x000000008000247e                . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE))
 
 .eh_frame
  *(.eh_frame)
@@ -117,7 +118,7 @@ LOAD UARTTest.o
 .exception_ranges
  *(.exception_ranges*)
 
-.tdata          0x0000000080002054        0x0
+.tdata          0x000000008000247e        0x0
                 [!provide]                        PROVIDE (__tdata_start = .)
  *(.tdata .tdata.* .gnu.linkonce.td.*)
 
@@ -125,18 +126,18 @@ LOAD UARTTest.o
  *(.tbss .tbss.* .gnu.linkonce.tb.*)
  *(.tcommon)
 
-.preinit_array  0x0000000080002054        0x0
+.preinit_array  0x000000008000247e        0x0
                 [!provide]                        PROVIDE (__preinit_array_start = .)
  *(.preinit_array)
                 [!provide]                        PROVIDE (__preinit_array_end = .)
 
-.init_array     0x0000000080002054        0x0
+.init_array     0x000000008000247e        0x0
                 [!provide]                        PROVIDE (__init_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*))
  *(.init_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .ctors)
                 [!provide]                        PROVIDE (__init_array_end = .)
 
-.fini_array     0x0000000080002054        0x0
+.fini_array     0x000000008000247e        0x0
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*))
  *(.fini_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .dtors)
@@ -165,7 +166,7 @@ LOAD UARTTest.o
 
 .dynamic
  *(.dynamic)
-                0x0000000080002054                . = DATA_SEGMENT_RELRO_END (., 0x0)
+                0x000000008000247e                . = DATA_SEGMENT_RELRO_END (., 0x0)
 
 .got
  *(.got.plt)
@@ -176,27 +177,24 @@ LOAD UARTTest.o
 .data
  *(.data .data.* .gnu.linkonce.d.*)
 
-seg0            0x0000000080002054      0x4f7
- seg0           0x0000000080002054      0x4f7 UARTTest.o
-
 .data1
  *(.data1)
-                0x000000008000254b                _edata = .
+                0x000000008000247e                _edata = .
                 [!provide]                        PROVIDE (edata = .)
-                0x000000008000254b                . = .
-                0x000000008000254b                __bss_start = .
+                0x000000008000247e                . = .
+                0x000000008000247e                __bss_start = .
 
-.bss            0x000000008000254b        0x0
+.bss            0x000000008000247e        0x0
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
  *(COMMON)
-                0x000000008000254b                . = ALIGN ((. != 0x0)?0x4:0x1)
-                0x000000008000254c                . = ALIGN (0x4)
-                0x000000008000254c                . = SEGMENT_START ("ldata-segment", .)
-                0x000000008000254c                . = ALIGN (0x4)
-                0x000000008000254c                _end = .
+                0x000000008000247e                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x0000000080002480                . = ALIGN (0x4)
+                0x0000000080002480                . = SEGMENT_START ("ldata-segment", .)
+                0x0000000080002480                . = ALIGN (0x4)
+                0x0000000080002480                _end = .
                 [!provide]                        PROVIDE (end = .)
-                0x000000008000254c                . = DATA_SEGMENT_END (.)
+                0x0000000080002480                . = DATA_SEGMENT_END (.)
 
 .stab
  *(.stab)
@@ -310,4 +308,4 @@ seg0            0x0000000080002054      0x4f7
  *(.note.GNU-stack)
  *(.gnu_debuglink)
  *(.gnu.lto_*)
-OUTPUT(UARTTest.elf elf32-m68k)
+OUTPUT(ROMTester.elf elf32-m68k)

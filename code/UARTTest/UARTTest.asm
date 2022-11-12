@@ -2,9 +2,10 @@
 ; Memory Map
 
 ROMBASE     equ     $000000     ; Base address for ROM space
+STATUSOUT   equ     $800000     ; Address of Status Output Board
 RAMBASE     equ     $E00000     ; Base address for RAM
 RAMLIMIT    equ     $F00000     ; Limit of onboard RAM
-DUART       equ     $F00000     ; DUART memory location
+DUART       equ     $F00001     ; DUART memory location
 
 ;***************************************************************************
 ; 68681 Duart Register Addresses
@@ -86,11 +87,11 @@ VECTORS_COUNT   equ     256
 ; Program Start
 ;***************************************************************************
 START::
-    jsr     initDuart           * Setup the serial port
+    jsr     initDuart           ; Setup the serial port
 LOOP:    
-    lea     msgBanner,A0        * Show our banner
+    lea     msgBanner,A0        ; Show our banner
     bsr.w   printString
-    bra.b   LOOP                * And do it again
+    bra.b   LOOP                ; And do it again and again
     
 ;***************************************************************************
 ; Prints a newline (CR, LF)
@@ -132,15 +133,29 @@ inChar:
     andi.b  #$7F,d0             * Clear MSb of character
     rts
         
-    
+;***************************************************************************    
+; Test for the presence of the 68681
+testDuart:
+    move.b  #0,D5               ; Indicate no MC68681 by default
+    move.b  #$00,IMR            ; Mask Interrupts
+    move.b  IVR,D0              ; Get IVR - Should be 0x0F at reset
+    cmp.b   #$0F,D0  
+    bne.s   done
+    move.b  #$50,IVR            ; To further verify, try to set IVR
+    move.b  IVR,D0              ; And then check it was set...
+    cmp.b   #$50,D0             ; to 0x50.
+    bne.s   done
+    move.b  #1,D5               ; Set D5 to indicate to INITSDB that there's a DUART present...
+done:    
+    rts
+
 ;***************************************************************************
 ; Initializes the 68681 DUART port A(1) as 9600 8N1 
 
-initDuart:
-    move.b  #$00,IMR            ; Mask Interrupts
-    ; move.b  IVR,D0              ; Get IVR - Should be 0x0F at reset
-    ; cmp.b   #$0F,D0  
-    ; bne.s   NO_DUART_HALT
+initDuart:    
+    jsr testDuart;
+    tst.b D5
+    beq.s NO_DUART_HALT         ; No DUART
 
     move.b  #$30,CRA            ; Reset Port A transmitter   
     move.b  #$20,CRA            ; Reset Port A receiver
@@ -154,7 +169,9 @@ initDuart:
     rts    
 
 NO_DUART_HALT:
-    bra NO_DUART_HALT
+    move.b #$FF,STATUSOUT
+.loop:    
+    bra .loop
 
 ;***************************************************************************
 ; Exception handlers   

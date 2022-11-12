@@ -5,7 +5,7 @@ UDS  LDS    RW     AS    A23    A22   A21   A20   DTKURT    GND
 NC   NC     NC     NC    NC     NC    NC    NC    URTSEL    VCC
 
 
-/URTSEL = A23 * A22 * A21 * A20 * /UDS
+/URTSEL = A23 * A22 * A21 * A20 * /LDS
 
 DESCRIPTION
 Address Decoding

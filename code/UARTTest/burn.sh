@@ -9,9 +9,9 @@ else
   echo "Burning ROM device type $ROMDEVICE"
 
   read -p "Place EVEN ROM in burner"
-  minipro -p $ROMDEVICE -s -w ROMTester_even.rom
+  minipro -p $ROMDEVICE -s -w UARTTest_even.rom
 
   read -p "Place ODD ROM in burner"
-  minipro -p $ROMDEVICE -s -w ROMTester_odd.rom
+  minipro -p $ROMDEVICE -s -w UARTTest_odd.rom
 fi
 
