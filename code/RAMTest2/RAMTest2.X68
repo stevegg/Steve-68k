@@ -102,11 +102,13 @@ START:
     * Setup the stack
     movea.l #RAMLIMIT,sp
     jsr initDuart
-    lea     msgBanner,A0       * Show our banner
+    lea     msgBanner,A1        * Show our banner
     bsr.w   printString
     
 MAIN_OUTER_LOOP:
 
+    lea     loopMessage,A1          * Show looping message
+    bsr.w   printString
     lea.l   RAMBASE,a0
     move.w  #$A0A0,d3
   
@@ -114,7 +116,9 @@ MAIN_LOOP:
 
     move.w  d3,(a0)
     cmp.w   (a0)+,d3
-    beq     MOVE_ON         ; If zero, assume write bus cycle succeeded
+    beq     MOVE_ON             ; If equal, assume write bus cycle succeeded
+    lea     errorMessage,A1     ; Show error message
+    bsr.w   printString
     stop    #2700
     
 MOVE_ON:
@@ -131,7 +135,7 @@ printNewline:
 *
 printString:
  .loop:
-    move.b  (a0)+, d0           * Read in character
+    move.b  (a1)+, d0           * Read in character
     beq.s   .end                * Check for the null
     
     bsr.s   outChar             * Otherwise write the character
@@ -189,6 +193,12 @@ msgBanner:
     dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
     dc.b       '==================',CR,LF
     dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
+    
+loopMessage:
+    dc.b 'Looping',CR,LF,0
+    
+errorMessage:
+    dc.b 'Error reading memory',CR,LF,0
     
 msgNewline:
     dc.b CR,LF,0
