@@ -88,10 +88,13 @@ VECTORS_COUNT   equ     256
 ;***************************************************************************
 START::
     jsr     initDuart           ; Setup the serial port
-LOOP:    
+
     lea     msgBanner,A0        ; Show our banner
     bsr.w   printString
-    bra.b   LOOP                ; And do it again and again
+.loop:
+    jsr     inChar              ; Read a character and place in D0
+    jsr     outChar             ; write the same character out from Do
+    bra.b   .loop               ; And do it again and again
     
 ;***************************************************************************
 ; Prints a newline (CR, LF)
@@ -161,7 +164,7 @@ initDuart:
     move.b  #$20,CRA            ; Reset Port A receiver
     move.b  #$10,CRA            ; Reset Port A MR (mode register) pointer
 
-    move.b  #$80,ACR            ; Select baud rate set 2
+    move.b  #$60,ACR            ; Select baud rate set 1
     move.b  #$BB,CSRA           ; Set both Rx, Tx speeds to 9600 baud
     move.b  #$13,MRA            ; Set port A to 8 bit character, no parity
     move.b  #$07,MRA            ; Select normal operating mode 

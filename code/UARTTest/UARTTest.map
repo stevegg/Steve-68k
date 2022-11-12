@@ -176,27 +176,27 @@ LOAD UARTTest.o
 .data
  *(.data .data.* .gnu.linkonce.d.*)
 
-seg0            0x0000000080002054      0x4f7
- seg0           0x0000000080002054      0x4f7 UARTTest.o
+seg0            0x0000000080002054      0x4ff
+ seg0           0x0000000080002054      0x4ff UARTTest.o
 
 .data1
  *(.data1)
-                0x000000008000254b                _edata = .
+                0x0000000080002553                _edata = .
                 [!provide]                        PROVIDE (edata = .)
-                0x000000008000254b                . = .
-                0x000000008000254b                __bss_start = .
+                0x0000000080002553                . = .
+                0x0000000080002553                __bss_start = .
 
-.bss            0x000000008000254b        0x0
+.bss            0x0000000080002553        0x0
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
  *(COMMON)
-                0x000000008000254b                . = ALIGN ((. != 0x0)?0x4:0x1)
-                0x000000008000254c                . = ALIGN (0x4)
-                0x000000008000254c                . = SEGMENT_START ("ldata-segment", .)
-                0x000000008000254c                . = ALIGN (0x4)
-                0x000000008000254c                _end = .
+                0x0000000080002553                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x0000000080002554                . = ALIGN (0x4)
+                0x0000000080002554                . = SEGMENT_START ("ldata-segment", .)
+                0x0000000080002554                . = ALIGN (0x4)
+                0x0000000080002554                _end = .
                 [!provide]                        PROVIDE (end = .)
-                0x000000008000254c                . = DATA_SEGMENT_END (.)
+                0x0000000080002554                . = DATA_SEGMENT_END (.)
 
 .stab
  *(.stab)
