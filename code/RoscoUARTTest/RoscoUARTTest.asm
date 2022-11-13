@@ -89,17 +89,17 @@ START::
     move.b  #$07,DUART_MR2A           ; (Normal, No TX CTS/RTS, 1 stop bit)
 
 ;    38400 working
-    move.b  #$70,DUART_ACR           ; Set 0, Timer, X1/X2, /16
-    move.b  #$CC,DUART_CSRA          ; 38K4
+;    move.b  #$70,DUART_ACR           ; Set 0, Timer, X1/X2, /16
+;    move.b  #$CC,DUART_CSRA          ; 38K4
 
 ;    57600 working
 ;    move.b  #$60,DUART_ACR           ; Set 0, Counter, X1/X2, /16
 ;    move.b  #$DD,DUART_CSRA          ; Baud from timer
     
     ; 115200 working
-;    move.b  #$60,DUART_ACR            ; Set 0, Counter, X1/X2, /16
-;    move.b  DUART_CRA,D0              ; Enable undocumented rates
-;    move.b  #$66,DUART_CSRA           ; 1200 per spec, uses counter instead
+    move.b  #$60,DUART_ACR            ; Set 0, Counter, X1/X2, /16
+    move.b  DUART_CRA,D0              ; Enable undocumented rates
+    move.b  #$66,DUART_CSRA           ; 1200 per spec, uses counter instead
 
     move.b  #0,DUART_CUR              ; Counter high: 0 
     move.b  #2,DUART_CLR              ; Counter  low: 2  (115.2KHz) 

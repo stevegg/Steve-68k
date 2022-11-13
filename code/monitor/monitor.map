@@ -6,7 +6,7 @@ Name             Origin             Length             Attributes
 
 Linker script and memory map
 
-LOAD RoscoUARTTest.o
+LOAD monitor.o
                 [!provide]                        PROVIDE (__executable_start = SEGMENT_START ("text-segment", 0x80000000))
                 0x0000000080000054                . = (SEGMENT_START ("text-segment", 0x80000000) + SIZEOF_HEADERS)
 
@@ -65,14 +65,13 @@ LOAD RoscoUARTTest.o
 .iplt
  *(.iplt)
 
-.text           0x0000000080000054      0x4ec
+.text
  *(.text.unlikely .text.*_unlikely .text.unlikely.*)
  *(.text.exit .text.exit.*)
  *(.text.startup .text.startup.*)
  *(.text.hot .text.hot.*)
  *(SORT_BY_NAME(.text.sorted.*))
  *(.text .stub .text.* .gnu.linkonce.t.*)
- .text          0x0000000080000054      0x4ec RoscoUARTTest.o
  *(.gnu.warning)
 
 .fini
@@ -103,7 +102,7 @@ LOAD RoscoUARTTest.o
 
 .exception_ranges
  *(.exception_ranges*)
-                0x0000000080002540                . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE))
+                0x0000000080002054                . = DATA_SEGMENT_ALIGN (CONSTANT (MAXPAGESIZE), CONSTANT (COMMONPAGESIZE))
 
 .eh_frame
  *(.eh_frame)
@@ -118,7 +117,7 @@ LOAD RoscoUARTTest.o
 .exception_ranges
  *(.exception_ranges*)
 
-.tdata          0x0000000080002540        0x0
+.tdata          0x0000000080002054        0x0
                 [!provide]                        PROVIDE (__tdata_start = .)
  *(.tdata .tdata.* .gnu.linkonce.td.*)
 
@@ -126,18 +125,18 @@ LOAD RoscoUARTTest.o
  *(.tbss .tbss.* .gnu.linkonce.tb.*)
  *(.tcommon)
 
-.preinit_array  0x0000000080002540        0x0
+.preinit_array  0x0000000080002054        0x0
                 [!provide]                        PROVIDE (__preinit_array_start = .)
  *(.preinit_array)
                 [!provide]                        PROVIDE (__preinit_array_end = .)
 
-.init_array     0x0000000080002540        0x0
+.init_array     0x0000000080002054        0x0
                 [!provide]                        PROVIDE (__init_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.init_array.*) SORT_BY_INIT_PRIORITY(.ctors.*))
  *(.init_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .ctors)
                 [!provide]                        PROVIDE (__init_array_end = .)
 
-.fini_array     0x0000000080002540        0x0
+.fini_array     0x0000000080002054        0x0
                 [!provide]                        PROVIDE (__fini_array_start = .)
  *(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*))
  *(.fini_array EXCLUDE_FILE(*crtend?.o *crtend.o *crtbegin?.o *crtbegin.o) .dtors)
@@ -166,7 +165,7 @@ LOAD RoscoUARTTest.o
 
 .dynamic
  *(.dynamic)
-                0x0000000080002540                . = DATA_SEGMENT_RELRO_END (., 0x0)
+                0x0000000080002054                . = DATA_SEGMENT_RELRO_END (., 0x0)
 
 .got
  *(.got.plt)
@@ -177,24 +176,27 @@ LOAD RoscoUARTTest.o
 .data
  *(.data .data.* .gnu.linkonce.d.*)
 
+seg0            0x0000000080002054      0x53b
+ seg0           0x0000000080002054      0x53b monitor.o
+
 .data1
  *(.data1)
-                0x0000000080002540                _edata = .
+                0x000000008000258f                _edata = .
                 [!provide]                        PROVIDE (edata = .)
-                0x0000000080002540                . = .
-                0x0000000080002540                __bss_start = .
+                0x000000008000258f                . = .
+                0x000000008000258f                __bss_start = .
 
-.bss            0x0000000080002540        0x0
+.bss            0x000000008000258f        0x0
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
  *(COMMON)
-                0x0000000080002540                . = ALIGN ((. != 0x0)?0x4:0x1)
-                0x0000000080002540                . = ALIGN (0x4)
-                0x0000000080002540                . = SEGMENT_START ("ldata-segment", .)
-                0x0000000080002540                . = ALIGN (0x4)
-                0x0000000080002540                _end = .
+                0x000000008000258f                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x0000000080002590                . = ALIGN (0x4)
+                0x0000000080002590                . = SEGMENT_START ("ldata-segment", .)
+                0x0000000080002590                . = ALIGN (0x4)
+                0x0000000080002590                _end = .
                 [!provide]                        PROVIDE (end = .)
-                0x0000000080002540                . = DATA_SEGMENT_END (.)
+                0x0000000080002590                . = DATA_SEGMENT_END (.)
 
 .stab
  *(.stab)
@@ -308,4 +310,4 @@ LOAD RoscoUARTTest.o
  *(.note.GNU-stack)
  *(.gnu_debuglink)
  *(.gnu.lto_*)
-OUTPUT(RoscoUARTTest.elf elf32-m68k)
+OUTPUT(monitor.elf elf32-m68k)
