@@ -1,13 +1,10 @@
 ; Steve 68k ROM Tester
 
+include "../shared/defines.asm"
 
-RAMBASE     equ     $E00000            ; Base address for RAM
-RAMLIMIT    equ     $F00000            ; Limit of onboard RAM
-ROMBASE     equ     $000000            ; Base address for ROM space
-ROMTESTER   equ     $800000
 DELAYAMT    equ     $1000               ; Delay size
 
-    section .text
+    ORG $0000
 
 VECTORS:
     dc.l    RAMLIMIT                    ; 00: Stack (top of on-board RAM)
@@ -54,7 +51,7 @@ VECTORS:
 VECTORS_END:
 VECTORS_COUNT   equ     256
 
-START:
+START::
 
     lea.l   ROMTESTER,a0
     
@@ -76,6 +73,6 @@ LOOP:
     bne.s   LOOP        ; 10 cycles for branch    
     bra     MAIN_LOOP   ; go back and loop
     
-GENERIC_HANDLER:
+GENERIC_HANDLER::
     bra GENERIC_HANDLER
     rte    

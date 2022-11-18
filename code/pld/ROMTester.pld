@@ -5,11 +5,15 @@ UDS     LDS    RW       A23     A22     A21     A20     A19     NC      GND
 NC      NC     PPDTACK  WRITE   READ    BUSDIR  TSSLLO TSSLHI  DTACK   VCC
 
 
-/TSSLLO = A23 * /A22 * /A21 * /A20 * /LDS
-/TSSLHI = A23 * /A22 * /A21 * /A20 * /UDS
-BUSDIR = /RW
-READ = RW
-WRITE = /RW
+/TSSLLO = A23 * /A22 * /A21 * /A20 * /UDS
+/TSSLHI = A23 * /A22 * /A21 * /A20 * /LDS
+/BUSDIR = RW
+
+READ.T = VCC
+READ.E = RW
+
+WRITE.T = VCC
+WRITE.E = /RW
 
 PPDTACK = /TSSLLO + /TSSLHI
 

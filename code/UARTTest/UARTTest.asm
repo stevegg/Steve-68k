@@ -5,7 +5,8 @@ ROMBASE     equ     $000000     ; Base address for ROM space
 STATUSOUT   equ     $800000     ; Address of Status Output Board
 RAMBASE     equ     $E00000     ; Base address for RAM
 RAMLIMIT    equ     $F00000     ; Limit of onboard RAM
-DUART       equ     $F00001     ; DUART memory location
+IOBASE      equ     $F80000     ; IO address space
+DUART       equ     $F80001     ; DUART memory location
 
 ;***************************************************************************
 ; 68681 Duart Register Addresses 
@@ -178,7 +179,7 @@ NO_DUART_HALT:
 
 ;***************************************************************************
 ; Exception handlers   
-GENERIC_HANDLER:
+GENERIC_HANDLER::
     bra GENERIC_HANDLER
     rte
 

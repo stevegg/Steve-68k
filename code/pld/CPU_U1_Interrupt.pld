@@ -1,0 +1,10 @@
+GAL16V8
+CPU Decode
+
+CLK     A1      A2      A3      FC0     FC1     FC2     HALT    RESET   GND
+NC      NC      NC      NC      NC      NC      NC      NC      IACK    VCC
+
+/IACK = /FC0 * /FC1 */FC2 * /A1 * /A2 * A3
+/HALT = /RESET
+
+DESCRIPTION

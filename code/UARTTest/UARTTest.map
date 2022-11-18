@@ -176,21 +176,21 @@ LOAD UARTTest.o
 .data
  *(.data .data.* .gnu.linkonce.d.*)
 
-seg0            0x0000000080002054      0x4ff
- seg0           0x0000000080002054      0x4ff UARTTest.o
+seg0            0x0000000080002054      0x4fd
+ seg0           0x0000000080002054      0x4fd UARTTest.o
 
 .data1
  *(.data1)
-                0x0000000080002553                _edata = .
+                0x0000000080002551                _edata = .
                 [!provide]                        PROVIDE (edata = .)
-                0x0000000080002553                . = .
-                0x0000000080002553                __bss_start = .
+                0x0000000080002551                . = .
+                0x0000000080002551                __bss_start = .
 
-.bss            0x0000000080002553        0x0
+.bss            0x0000000080002551        0x0
  *(.dynbss)
  *(.bss .bss.* .gnu.linkonce.b.*)
  *(COMMON)
-                0x0000000080002553                . = ALIGN ((. != 0x0)?0x4:0x1)
+                0x0000000080002551                . = ALIGN ((. != 0x0)?0x4:0x1)
                 0x0000000080002554                . = ALIGN (0x4)
                 0x0000000080002554                . = SEGMENT_START ("ldata-segment", .)
                 0x0000000080002554                . = ALIGN (0x4)

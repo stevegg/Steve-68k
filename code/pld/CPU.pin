@@ -10,7 +10,7 @@
    6   | FC1      | Input
    7   | FC2      | Input
    8   | RESET    | Input
-   9   | NC       | Input
+   9   | AS       | Input
   10   | NC       | Input
   11   | NC       | Input
   12   | GND      | GND
@@ -24,6 +24,6 @@
   20   | NC       | NC
   21   | HALT     | Output
   22   | NC       | NC
-  23   | IACK     | NC
+  23   | IACK     | Output
   24   | VCC      | VCC
 

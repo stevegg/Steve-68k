@@ -1,0 +1,25 @@
+GAL16V8
+GLUE
+
+UDS     LDS    RW       A23     A22     A21     A20     A19     A18      GND
+A17     NC     PPDTACK  WRITE   READ    BUSDIR  STATLO  STATHI  DTACK   VCC
+
+
+STATLO = A23 * /A22 * /A21 * /A20 * /A19 * /A18 * A17 * /RW * /UDS
+STATHI = A23 * /A22 * /A21 * /A20 * /A19 * /A19 * A17 * /RW * /LDS
+
+READ.T = VCC
+READ.E = RW
+
+WRITE.T = VCC
+WRITE.E = /RW
+
+PPDTACK = /STATLO + /STATHI
+
+DTACK.T = GND
+DTACK.E = PPDTACK
+
+DESCRIPTION
+Status output
+
+Located at $0x800000

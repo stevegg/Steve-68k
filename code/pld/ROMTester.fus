@@ -12,7 +12,7 @@ Pin 19 = DTACK        XOR = 1   AC1 = 1
 
 Pin 18 = TSSLHI       XOR = 0   AC1 = 1
   8  ---- ---- ---- ---- ---- ---- ---- ----
-  9  ---x ---- x--- -x-- -x-- -x-- ---- ----
+  9  -x-- ---- x--- -x-- -x-- -x-- ---- ----
  10  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  11  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  12  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -22,7 +22,7 @@ Pin 18 = TSSLHI       XOR = 0   AC1 = 1
 
 Pin 17 = TSSLLO       XOR = 0   AC1 = 1
  16  ---- ---- ---- ---- ---- ---- ---- ----
- 17  -x-- ---- x--- -x-- -x-- -x-- ---- ----
+ 17  ---x ---- x--- -x-- -x-- -x-- ---- ----
  18  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  19  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  20  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -30,9 +30,9 @@ Pin 17 = TSSLLO       XOR = 0   AC1 = 1
  22  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  23  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
 
-Pin 16 = BUSDIR       XOR = 1   AC1 = 1
+Pin 16 = BUSDIR       XOR = 0   AC1 = 1
  24  ---- ---- ---- ---- ---- ---- ---- ----
- 25  ---- -x-- ---- ---- ---- ---- ---- ----
+ 25  ---- x--- ---- ---- ---- ---- ---- ----
  26  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  27  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  28  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -41,8 +41,8 @@ Pin 16 = BUSDIR       XOR = 1   AC1 = 1
  31  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
 
 Pin 15 = READ         XOR = 1   AC1 = 1
- 32  ---- ---- ---- ---- ---- ---- ---- ----
- 33  ---- x--- ---- ---- ---- ---- ---- ----
+ 32  ---- x--- ---- ---- ---- ---- ---- ----
+ 33  ---- ---- ---- ---- ---- ---- ---- ----
  34  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  35  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  36  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
@@ -51,8 +51,8 @@ Pin 15 = READ         XOR = 1   AC1 = 1
  39  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
 
 Pin 14 = WRITE        XOR = 1   AC1 = 1
- 40  ---- ---- ---- ---- ---- ---- ---- ----
- 41  ---- -x-- ---- ---- ---- ---- ---- ----
+ 40  ---- -x-- ---- ---- ---- ---- ---- ----
+ 41  ---- ---- ---- ---- ---- ---- ---- ----
  42  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  43  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
  44  xxxx xxxx xxxx xxxx xxxx xxxx xxxx xxxx
