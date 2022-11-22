@@ -5,11 +5,11 @@
    1   | UDS      | Input
    2   | LDS      | Input
    3   | RW       | Input
-   4   | AS       | Input
-   5   | A23      | Input
-   6   | A22      | Input
-   7   | A21      | Input
-   8   | A20      | Input
+   4   | A18      | Input
+   5   | A17      | Input
+   6   | A16      | Input
+   7   | A15      | Input
+   8   | A14      | Input
    9   | IOSEL    | Input
   10   | GND      | GND
   11   | NC       | Input

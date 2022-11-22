@@ -1,13 +1,14 @@
 GAL16V8
 GLUE
  
-UDS  LDS    RW     AS    A23    A22   A21   A20   IOSEL     GND
+UDS  LDS    RW     A18   A17    A16   A15   A14   IOSEL     GND
 NC   NC     NC     NC    NC     NC    NC    NC    URTSEL    VCC
 
-/URTSEL = /IOSEL
+/URTSEL = /LDS * /A18 * /A17 * /A16 * /A15 * A14
           
 
 DESCRIPTION
-Address Decoding
-
-Duart at 0xF00000.  Now at IOSEL address of F80000
+Address Decoding for UART
+           2         1
+        321098765432109876543210
+UART =  111110000100000000000000 = F84000

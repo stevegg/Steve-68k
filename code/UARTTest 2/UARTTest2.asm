@@ -2,10 +2,11 @@
 ; Memory Map
 
 ROMBASE     equ     $000000     ; Base address for ROM space
-STATUSOUT   equ     $800000     ; Address of Status Output Board
 RAMBASE     equ     $E00000     ; Base address for RAM
 RAMLIMIT    equ     $F00000     ; Limit of onboard RAM
-DUART       equ     $F00001     ; DUART memory location
+IOSEL       equ     $F80000     ; IO Area
+DUART       equ     $F80001     ; DUART memory location
+STATUS      equ     $FC0000     ; Status Board area
 
 ;***************************************************************************
 ; 68681 Duart Register Addresses 
@@ -40,10 +41,6 @@ ESC         equ $1B
 
 CTRLC	    EQU	$03     
 CTRLX	    EQU	$18             ; Line Clear
-
-A_VEC       EQU 64              ; Vector number for DUART interrupt
-VEC_ADD     EQU A_VEC*4         ; Interrupt vector table address
-IMRM        EQU %00000010
 
     ORG $0000
 
@@ -157,23 +154,12 @@ done:
     rts
 
 ;***************************************************************************
-; Setup Interrupt Vector requirements
-setupIVR:
-    move.B  #ROMTESTER,FF
-    LEA     BUFFER,A1
-    LEA     A_ISR,A0
-    MOVE.L  A0,VEC_ADD
-    rts;
-
-;***************************************************************************
 ; Initializes the 68681 DUART port A(1) as 9600 8N1 
 
 initDuart:    
     jsr testDuart;
     tst.b D5
     beq.s NO_DUART_HALT         ; No DUART
-
-    jsr setupIVR;
 
     MOVE.B  #$30,CRA            ; Reset Port A transmitter
     MOVE.B  #$20,CRA            ; Reset Port A receiver

@@ -7,19 +7,19 @@
                           |                 |
                       LDS |  2           19 | DTACK
                           |                 |
-                       RW |  3           18 | STATHI
+                       RW |  3           18 | STATLO
                           |                 |
-                      A23 |  4           17 | STATLO
+                      A18 |  4           17 | STATHI
                           |                 |
-                      A22 |  5           16 | BUSDIR
+                      A17 |  5           16 | PPDTACK
                           |                 |
-                      A21 |  6           15 | READ
+                      A16 |  6           15 | NC
                           |                 |
-                      A20 |  7           14 | WRITE
+                      A15 |  7           14 | NC
                           |                 |
-                      A19 |  8           13 | PPDTACK
+                      A14 |  8           13 | NC
                           |                 |
-                      A18 |  9           12 | NC
+                    IOSEL |  9           12 | NC
                           |                 |
-                      GND | 10           11 | A17
+                      GND | 10           11 | NC
                           -------------------
