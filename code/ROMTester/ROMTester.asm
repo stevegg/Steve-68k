@@ -1,13 +1,10 @@
 ; Steve 68k ROM Tester
 
+include "../shared/defines.asm"
 
-RAMBASE     equ     $E00000            ; Base address for RAM
-RAMLIMIT    equ     $E0F000            ; Limit of onboard RAM
-ROMBASE     equ     $000000            ; Base address for ROM space
-ROMTESTER   equ     $800000
 DELAYAMT    equ     $1000               ; Delay size
 
-    section .text
+    ORG $0000
 
 VECTORS:
     dc.l    RAMLIMIT                    ; 00: Stack (top of on-board RAM)
@@ -59,11 +56,11 @@ START::
     lea.l   ROMTESTER,a0
     
 MAIN_OUTER_LOOP:
-    move.b  #$00,d0
+    move.w  #$0000,d0
     
 MAIN_LOOP:
-    move.b  d0,(a0)
-    cmp.b   #$FF,d0     ; does D0 equal 10?
+    move.w  d0,(a0)
+    cmp.w   #$FFFF,d0     ; does D0 equal 10?
     beq     MAIN_OUTER_LOOP
     addi    #1,d0       ; increment D0
     
@@ -74,11 +71,8 @@ DELAY:
 LOOP: 
     sub.l   d2,d1       ; 6 cycles for Dn.l->Dn.l
     bne.s   LOOP        ; 10 cycles for branch    
-    
     bra     MAIN_LOOP   ; go back and loop
-
-;------------------------------------------------------------
-; Exception handlers   
+    
 GENERIC_HANDLER::
     bra GENERIC_HANDLER
-    rte
+    rte    

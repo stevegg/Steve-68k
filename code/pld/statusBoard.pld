@@ -1,0 +1,22 @@
+GAL16V8
+Status Display
+
+UDS     LDS    RW       A18    A17     A16     A15     A14     IOSEL   GND
+NC      NC     NC       NC     NC      PPDTACK STATHI  STATLO  DTACK   VCC
+
+STATLO = /IOSEL * A18 * /A17 * /A16 * /A15 * /A14 * /UDS * /RW
+STATHI = /IOSEL * A18 * /A17 * /A16 * /A15 * /A14 * /LDS * /RW
+
+/PPDTACK = /STATLO + /STATHI
+
+DTACK.T = GND
+DTACK.E = /PPDTACK
+
+
+DESCRIPTION
+Status output
+
+           2         1
+         321098765432109876543210
+Status = 111111000000000000000000 = FC0000
+Located at $0xFC0000

@@ -1,0 +1,267 @@
+00000404 Starting Address
+Assembler used: EASy68K Editor/Assembler v5.16.01
+Created On: 2022-11-09 9:45:56 PM
+
+00000000                             1  *-----------------------------------------------------------
+00000000                             2  * Title      :
+00000000                             3  * Written by :
+00000000                             4  * Date       :
+00000000                             5  * Description:
+00000000                             6  *-----------------------------------------------------------
+00000000                             7  
+00000000                             8  *********************************
+00000000                             9  * System Memory Map
+00000000                            10  *
+00000000                            11  
+00000000  =00000000                 12  ROMBASE     equ     $000000             ; Base address for ROM space
+00000000  =00E00000                 13  RAMBASE     equ     $E00000             ; Base address for RAM
+00000000  =00F00000                 14  RAMLIMIT    equ     $F00000             ; Limit of onboard RAM
+00000000  =00F00000                 15  DUART       equ     $F00000             ; DUART memory location
+00000000                            16  
+00000000  =00F00000                 17  ERRIND      equ     $F00000
+00000000  =00E00F00                 18  TESTLIMIT   equ     $E00F00
+00000000                            19  
+00000000                            20  *********************************
+00000000                            21  * 68681 Duart Register Addresses
+00000000                            22  *
+00000000                            23  
+00000000  =00F00000                 24  MRA         EQU DUART+0         * Mode Register Port A
+00000000  =00F00002                 25  SRA         EQU DUART+2         * Status Register Port A (read only).
+00000000  =00F00002                 26  CSRA        EQU DUART+2         * Clock Select Register Port A (write only)
+00000000  =00F00004                 27  CRA         EQU DUART+4         * Commands Register Port A (write only)
+00000000  =00F00006                 28  RBA         EQU DUART+6         * Receiver Buffer Port A (read only)
+00000000  =00F00006                 29  TBA         EQU DUART+6         * Transmitter Buffer Port A (write only)
+00000000  =00F00008                 30  ACR         EQU DUART+8         * Auxiliary Control Register
+00000000  =00F0000A                 31  ISR         EQU DUART+10        * Interrupt Status Register (read only)
+00000000  =00F0000A                 32  IMR         EQU DUART+10        * Interrupt Mask Register (write only)
+00000000  =00F00010                 33  MRB         EQU DUART+16        * Mode Register Port B
+00000000  =00F00012                 34  SRB         EQU DUART+18        * Status Register Port B (read only).
+00000000  =00F00012                 35  CSRB        EQU DUART+18        * Clock Select Register Port B (write only)
+00000000  =00F00014                 36  CRB         EQU DUART+20        * Commands Register Port B (write only)
+00000000  =00F00016                 37  RBB         EQU DUART+22        * Receiver Buffer Port B (read only)
+00000000  =00F00016                 38  TBB         EQU DUART+22        * Transmitter Buffer Port B (write only)
+00000000  =00F00018                 39  IVR         EQU DUART+24        * Interrupt Vector Register
+00000000                            40  
+00000000                            41  **********************************
+00000000                            42  * ASCII Control Characters
+00000000                            43  *
+00000000  =00000007                 44  BEL         equ $07
+00000000  =00000008                 45  BKSP        equ $08             * CTRL-H
+00000000  =00000009                 46  TAB         equ $09
+00000000  =0000000A                 47  LF          equ $0A
+00000000  =0000000D                 48  CR          equ $0D
+00000000  =0000001B                 49  ESC         equ $1B
+00000000                            50  
+00000000  =00000003                 51  CTRLC       EQU $03     
+00000000  =00000018                 52  CTRLX       EQU $18             * Line Clear
+00000000                            53  
+00000000                            54      ORG $0000
+00000000                            55  
+00000000                            56  VECTORS:
+00000000= 00F00000                  57      DC.L    RAMLIMIT                    ; 00: Stack (top of on-board RAM)
+00000004= 00000404                  58      DC.L    START                       ; 01: Initial PC (start of ROM code)
+00000008= 000004CE                  59      DC.L    GENERIC_HANDLER             ; 02: Bus Error
+0000000C                            60  
+0000000C= 000004CE                  61      DC.L    GENERIC_HANDLER             ; 02: Bus Error
+00000010= 000004CE                  62      DC.L    GENERIC_HANDLER             ; 03: Address Error
+00000014= 000004CE                  63      DC.L    GENERIC_HANDLER             ; 04: Illegal Instruction
+00000018= 000004CE                  64      DC.L    GENERIC_HANDLER             ; 05: Divide by Zero
+0000001C= 000004CE                  65      DC.L    GENERIC_HANDLER             ; 06: CHK Instruction
+00000020= 000004CE                  66      DC.L    GENERIC_HANDLER             ; 07: TRAPV Instruction
+00000024= 000004CE                  67      DC.L    GENERIC_HANDLER             ; 08: Privilege Violation
+00000028= 000004CE                  68      DC.L    GENERIC_HANDLER             ; 09: Trace
+0000002C= 000004CE                  69      DC.L    GENERIC_HANDLER             ; 0A: Line 1010 Emulator
+00000030= 000004CE                  70      DC.L    GENERIC_HANDLER             ; 0B: Line 1111 Emulator
+00000034= 000004CE                  71      DC.L    GENERIC_HANDLER             ; 0C: Reserved
+00000038= 000004CE                  72      DC.L    GENERIC_HANDLER             ; 0D: Reserved
+0000003C= 000004CE                  73      DC.L    GENERIC_HANDLER             ; 0E: Format error (MC68010 Only)
+00000040= 000004CE                  74      DC.L    GENERIC_HANDLER             ; 0F: Uninitialized Vector
+00000044                            75  
+00000044= 000004CE 000004CE ...     76      DCB.L   8,GENERIC_HANDLER           ; 10-17: Reserved
+00000064                            77  
+00000064= 000004CE                  78      DC.L    GENERIC_HANDLER             ; 18: Spurious Interrupt
+00000068                            79  
+00000068= 000004CE 000004CE ...     80      DCB.L   7,GENERIC_HANDLER           ; 19-1F: Level 1-7 Autovectors
+00000084= 000004CE 000004CE ...     81      DCB.L   13,GENERIC_HANDLER          ; 20-2C: TRAP Handlers (unused)
+000000B8= 000004CE                  82      DC.L    GENERIC_HANDLER             ; 2D: TRAP#13 handler (replaced later)
+000000BC= 000004CE                  83      DC.L    GENERIC_HANDLER             ; 2E: TRAP#14 handler
+000000C0= 000004CE                  84      DC.L    GENERIC_HANDLER             ; 2F: TRAP#15 handler (replaced later)
+000000C4= 000004CE 000004CE ...     85      DCB.L   16,GENERIC_HANDLER          ; 30-3F: Remaining Reserved vectors
+00000104= 000004CE 000004CE ...     86      DCB.L   4,GENERIC_HANDLER           ; 40-43: MFP GPIO #0-3 (Not used)
+00000114= 000004CE                  87      DC.L    GENERIC_HANDLER             ; 44: MFP Timer D (Interrupt not used)
+00000118= 000004CE                  88      DC.L    GENERIC_HANDLER             ; 45: MFP Timer C (System tick)
+0000011C= 000004CE 000004CE         89      DCB.L   2,GENERIC_HANDLER           ; 46-47: MFP GPIO #4-5 (Not used)
+00000124= 000004CE                  90      DC.L    GENERIC_HANDLER             ; 48: MFP Timer B (Not used)
+00000128= 000004CE                  91      DC.L    GENERIC_HANDLER             ; 49: Transmitter error (Not used)
+0000012C= 000004CE                  92      DC.L    GENERIC_HANDLER             ; 4A: Transmitter empty (Replaced later)
+00000130= 000004CE                  93      DC.L    GENERIC_HANDLER             ; 4B: Receiver error (Replaced later)
+00000134= 000004CE                  94      DC.L    GENERIC_HANDLER             ; 4C: Receiver buffer full (Replaced later)
+00000138= 000004CE                  95      DC.L    GENERIC_HANDLER             ; 4D: Timer A (Not used)
+0000013C= 000004CE 000004CE         96      DCB.L   2,GENERIC_HANDLER           ; 4E-4F: MFP GPIO #6-7 (Not used)
+00000144= 000004CE 000004CE ...     97      DCB.L   176,GENERIC_HANDLER         ; 50-FF: Unused user vectors
+00000404                            98  VECTORS_END:
+00000404  =00000100                 99  VECTORS_COUNT   equ     256
+00000404                           100  
+00000404                           101  START:
+00000404                           102      * Setup the stack
+00000404  2E7C 00F00000            103      movea.l #RAMLIMIT,sp
+0000040A  4EB9 0000048C            104      jsr initDuart
+00000410  43F9 000004D2            105      lea     msgBanner,A1        * Show our banner
+00000416  6100 0040                106      bsr.w   printString
+0000041A                           107      
+0000041A                           108  MAIN_OUTER_LOOP:
+0000041A                           109  
+0000041A  43F9 00000528            110      lea     loopMessage,A1          * Show looping message
+00000420  6100 0036                111      bsr.w   printString
+00000424  41F9 00E00000            112      lea.l   RAMBASE,a0
+0000042A  363C A0A0                113      move.w  #$A0A0,d3
+0000042E                           114    
+0000042E                           115  MAIN_LOOP:
+0000042E                           116  
+0000042E  3083                     117      move.w  d3,(a0)
+00000430  B658                     118      cmp.w   (a0)+,d3
+00000432  6700 0010                119      beq     MOVE_ON             ; If equal, assume write bus cycle succeeded
+00000436  43F9 00000532            120      lea     errorMessage,A1     ; Show error message
+0000043C  6100 001A                121      bsr.w   printString
+00000440  4E72 0A8C                122      stop    #2700
+00000444                           123      
+00000444                           124  MOVE_ON:
+00000444  B1FC 00E00F00            125      cmpa.l  #TESTLIMIT,a0
+0000044A  6D00 FFE2                126      blt.w   MAIN_LOOP
+0000044E  6000 FFCA                127      bra.w   MAIN_OUTER_LOOP    
+00000452                           128  
+00000452                           129  ******
+00000452                           130  * Prints a newline (CR, LF)
+00000452                           131  printNewline:
+00000452  41F9 00000549            132      lea     msgNewline, a0
+00000458                           133  ******
+00000458                           134  * Print a null terminated string
+00000458                           135  *
+00000458                           136  printString:
+00000458                           137   .loop:
+00000458  1019                     138      move.b  (a1)+, d0           * Read in character
+0000045A  6704                     139      beq.s   .end                * Check for the null
+0000045C                           140      
+0000045C  6104                     141      bsr.s   outChar             * Otherwise write the character
+0000045E  60F8                     142      bra.s   .loop               * And continue
+00000460                           143   .end:
+00000460  4E75                     144      rts
+00000462                           145      
+00000462                           146  
+00000462                           147  *****
+00000462                           148  * Writes a character to Port A, blocking if not ready (Full buffer)
+00000462                           149  *  - Takes a character in D0
+00000462                           150  outChar:
+00000462  0839 0002 00F00002       151      btst    #2, SRA             * Check if transmitter ready bit is set
+0000046A  67F6                     152      beq     outChar             * Not ready, try again
+0000046C  13C0 00F00006            153      move.b  d0, TBA             * Transmit Character
+00000472  4E75                     154      rts
+00000474                           155  
+00000474                           156  *****
+00000474                           157  * Reads in a character from Port A, blocking if none available
+00000474                           158  *  - Returns character in D0
+00000474                           159  *    
+00000474                           160  inChar:
+00000474  1039 00F00002            161      move.b  SRA, d0             * Check if there's something to read
+0000047A  0800 0000                162      btst.l  #0, d0              * RxRDY flag bit set?
+0000047E  67F4                     163      beq     inChar              * Nope, try again
+00000480  1039 00F00006            164      move.b  RBA, d0             * Read Character into D0
+00000486  0200 007F                165      andi.b  #$7F, d0            * Clear MSb of character
+0000048A  4E75                     166      rts
+0000048C                           167          
+0000048C                           168  *****
+0000048C                           169  * Initializes the 68681 DUART port A(1) as 19200 8N1 
+0000048C                           170  initDuart:
+0000048C  13FC 0030 00F00004       171      move.b  #$30, CRA           * Reset Port A transmitter   
+00000494  13FC 0020 00F00004       172      move.b  #$20, CRA           * Reset Port A receiver
+0000049C  13FC 0010 00F00004       173      move.b  #$10, CRA           * Reset Port A MR (mode register) pointer
+000004A4                           174  
+000004A4  13FC 0080 00F00008       175      MOVE.B  #$80, ACR           * Select baud rate set 2
+000004AC  13FC 00CC 00F00002       176      move.b  #$CC, CSRA          * Set both Rx, Tx speeds to 19200 baud
+000004B4  13FC 0013 00F00000       177      move.b  #$13, MRA           * Set port A to 8 bit character, no parity
+000004BC  13FC 0020 00F00000       178      move.b  #$20, MRA           * Select normal operating mode 
+000004C4  13FC 0005 00F00004       179      move.b  #$05, CRA           * Enable Port A transmitter and receiver
+000004CC                           180      
+000004CC  4E75                     181      rts    
+000004CE                           182      
+000004CE                           183  ;------------------------------------------------------------
+000004CE                           184  ; Exception handlers   
+000004CE                           185  GENERIC_HANDLER:
+000004CE  60FE                     186      bra GENERIC_HANDLER
+000004D0  4E73                     187      rte
+000004D2                           188      
+000004D2                           189  **********************************
+000004D2                           190  * Strings
+000004D2                           191  *
+000004D2                           192  msgBanner:
+000004D2= 0D 0A 53 74 65 76 ...    193      dc.b CR,LF,'Steve''s 68000 SBC',CR,LF
+000004E7= 3D 3D 3D 3D 3D 3D ...    194      dc.b       '==================',CR,LF
+000004FB= 54 79 70 65 20 61 ...    195      dc.b 'Type a character and it should echo back', CR, LF, CR, LF, 0
+00000528                           196      
+00000528                           197  loopMessage:
+00000528= 4C 6F 6F 70 69 6E ...    198      dc.b 'Looping',CR,LF,0
+00000532                           199      
+00000532                           200  errorMessage:
+00000532= 45 72 72 6F 72 20 ...    201      dc.b 'Error reading memory',CR,LF,0
+00000549                           202      
+00000549                           203  msgNewline:
+00000549= 0D 0A 00                 204      dc.b CR,LF,0
+0000054C                           205      
+0000054C                           206      END START
+
+No errors detected
+No warnings generated
+
+
+SYMBOL TABLE INFORMATION
+Symbol-name         Value
+-------------------------
+ACR                 F00008
+BEL                 7
+BKSP                8
+CR                  D
+CRA                 F00004
+CRB                 F00014
+CSRA                F00002
+CSRB                F00012
+CTRLC               3
+CTRLX               18
+DUART               F00000
+ERRIND              F00000
+ERRORMESSAGE        532
+ESC                 1B
+GENERIC_HANDLER     4CE
+IMR                 F0000A
+INCHAR              474
+INITDUART           48C
+ISR                 F0000A
+IVR                 F00018
+LF                  A
+LOOPMESSAGE         528
+MAIN_LOOP           42E
+MAIN_OUTER_LOOP     41A
+MOVE_ON             444
+MRA                 F00000
+MRB                 F00010
+MSGBANNER           4D2
+MSGNEWLINE          549
+OUTCHAR             462
+PRINTNEWLINE        452
+PRINTSTRING         458
+PRINTSTRING:END     460
+PRINTSTRING:LOOP    458
+RAMBASE             E00000
+RAMLIMIT            F00000
+RBA                 F00006
+RBB                 F00016
+ROMBASE             0
+SRA                 F00002
+SRB                 F00012
+START               404
+TAB                 9
+TBA                 F00006
+TBB                 F00016
+TESTLIMIT           E00F00
+VECTORS             0
+VECTORS_COUNT       100
+VECTORS_END         404

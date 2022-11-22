@@ -1,0 +1,18 @@
+GAL16V8
+CPU U3 Address Decoder
+
+A19     A20     A21     A22     A23     AS      UDS     LDS     RESET   GND
+NC      NC      NC      NC      NC      HALT    RUN     BOOT    IOSEL   VCC
+
+/IOSEL = A19 * A20 * A21 * A22 * A23 * /AS
+
+/HALT = /RESET
+
+/BOOT = GND
+
+/RUN = GND
+
+DESCRIPTION
+
+IOSEL = 111110000000000000000000 = F80000
+     

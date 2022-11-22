@@ -11,7 +11,7 @@
     (via_costs 50)
     (plane_via_costs 5)
     (start_ripup_costs 100)
-    (start_pass_no 10778)
+    (start_pass_no 6856)
     (layer_rule F.Cu
       (active on)
       (preferred_direction horizontal)
@@ -67,9 +67,7 @@
     /D11 /D12 /D13 /D14 /D15 /~{UDS} /~{LDS} /R~{W}
     /~{DTACK} /~{RESET} /~{HALT} /FC0 /FC1 /FC2 /~{BG} /~{BGACK}
     /~{BR} /~{VMA} /~{VPA} VCC /~{IRQ4} /~{IRQ2} /~{IRQ6} /~{IACK}
-    /~{ODDRAMSEL} /~{WR} /~{ODDROMSEL} "unconnected-(U3-Pad11)" "Net-(D1-Pad1)" "Net-(D1-Pad2)" /~{EVENROMSEL} /~{EVENRAMSEL}
-    "Net-(D2-Pad1)" "Net-(D3-Pad1)" "Net-(D3-Pad2)" "Net-(D4-Pad1)" "Net-(D4-Pad2)" /~{RAMSEL} /~{ROMSEL} "unconnected-(U6-Pad8)"
-    "unconnected-(U6-Pad10)" "unconnected-(U6-Pad12)"
+    /~{ODDRAMSEL} /~{WR} /~{ODDROMSEL} "unconnected-(U3-Pad11)" /~{EVENROMSEL} /~{EVENRAMSEL} "unconnected-(U3-Pad12)" "unconnected-(U3-Pad13)"
     (clearance_class default)
     (via_rule default)
     (rule

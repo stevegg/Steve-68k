@@ -5,22 +5,24 @@ UDS     LDS    RW       A23     A22     A21     A20     A19     NC      GND
 NC      NC     PPDTACK  WRITE   READ    BUSDIR  TSSLLO TSSLHI  DTACK   VCC
 
 
-/TSSLLO = A23 * /A22 * /A21 * /A20 * /LDS
-/TSSLHI = A23 * /A22 * /A21 * /A20 * /UDS
+/TSSLLO = A23 * /A22 * /A21 * /A20 * /UDS
+/TSSLHI = A23 * /A22 * /A21 * /A20 * /LDS
 /BUSDIR = RW
-READ = RW
-WRITE = /RW
+
+READ.T = VCC
+READ.E = RW
+
+WRITE.T = VCC
+WRITE.E = /RW
 
 PPDTACK = /TSSLLO + /TSSLHI
 
-DTACK.T = RW
+DTACK.T = GND
 DTACK.E = PPDTACK
 
 DESCRIPTION
 Address Decoding
 
-ROM     (0x0000 - 0x1FFFF)
-RAM     (0x20000 - 0x5FFFF)
-IO      (0xE0000 - 0xFFFFF)
-DUART   (0x100000 - 0x10FFFF)
-ROMTST  (0x800000 - 0x80FFFF)
+BUSDIR = positive if RW is negative
+
+Located at $0x800000

@@ -5,21 +5,21 @@
                           -------\___/-------
                       UDS |  1           20 | VCC
                           |                 |
-                      LDS |  2           19 | NC
+                      LDS |  2           19 | URTSEL
                           |                 |
                        RW |  3           18 | NC
                           |                 |
-                       AS |  4           17 | NC
+                      A18 |  4           17 | NC
                           |                 |
-                      A23 |  5           16 | NC
+                      A17 |  5           16 | NC
                           |                 |
-                      A22 |  6           15 | NC
+                      A16 |  6           15 | NC
                           |                 |
-                      A21 |  7           14 | NC
+                      A15 |  7           14 | NC
                           |                 |
-                      A20 |  8           13 | URTSEL
+                      A14 |  8           13 | NC
                           |                 |
-                   DTKURT |  9           12 | DTACK
+                    IOSEL |  9           12 | NC
                           |                 |
                       GND | 10           11 | NC
                           -------------------

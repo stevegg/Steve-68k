@@ -1,29 +1,25 @@
 
 
-                                GAL22V10
+                                GAL16V8
 
                           -------\___/-------
-                       AS |  1           24 | VCC
+                       AS |  1           20 | VCC
                           |                 |
-                      LDS |  2           23 | ODDRAM
+                      LDS |  2           19 | ODDRAM
                           |                 |
-                      UDS |  3           22 | EVNRAM
+                      UDS |  3           18 | EVNRAM
                           |                 |
-                       RW |  4           21 | ODDROM
+                       RW |  4           17 | ODDROM
                           |                 |
-                     IACK |  5           20 | EVNROM
+                     IACK |  5           16 | EVNROM
                           |                 |
-                      A18 |  6           19 | WR
+                      A20 |  6           15 | WR
                           |                 |
-                      A19 |  7           18 | DTACK
+                      A21 |  7           14 | DTACK
                           |                 |
-                      A20 |  8           17 | NC
+                      A22 |  8           13 | PPDTACK
                           |                 |
-                      A21 |  9           16 | NC
+                      A23 |  9           12 | NC
                           |                 |
-                      A22 | 10           15 | NC
-                          |                 |
-                      A23 | 11           14 | PPDTACK
-                          |                 |
-                      GND | 12           13 | NC
+                      GND | 10           11 | NC
                           -------------------

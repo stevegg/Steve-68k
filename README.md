@@ -2,7 +2,7 @@
 
 ![Steve 68k](./Steve%2068k.png?raw=true "Steve 68k")
 
-This is my extremely simple 68000 single board computer.
+This is my extremely simple 68000 single board computer.  It has 512k of ROM and 512k of RAM.
 
 ## What's the Point?
 

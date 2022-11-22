@@ -1,8 +1,8 @@
-GAL22V10
+GAL16V8
 ROM
 
-AS LDS     UDS RW IACK A18   A19 A20    A21     A22     A23     GND
-NC PPDTACK NC  NC NC   DTACK WR  EVNROM ODDROM  EVNRAM  ODDRAM  VCC    
+AS      LDS     UDS     RW      IACK    A20    A21     A22     A23      GND
+NC      NC      PPDTACK DTACK   WR      EVNROM ODDROM  EVNRAM  ODDRAM  VCC    
 
 /EVNRAM  =  /AS * /UDS * A23 * A22 * A21 * /A20
 /ODDRAM  =  /AS * /LDS * A23 * A22 * A21 * /A20
@@ -11,16 +11,19 @@ NC PPDTACK NC  NC NC   DTACK WR  EVNROM ODDROM  EVNRAM  ODDRAM  VCC
 /ODDROM  =  /AS * /LDS * /A23 * /A22 * /A21 * /A20
 
 /WR       = RW
-/PPDTACK  = /EVNROM
-          + /ODDROM
-          + /EVNRAM
-          + /ODDRAM
+/PPDTACK  = /AS * /UDS * A23 * A22 * A21 * /A20
+          + /AS * /LDS * A23 * A22 * A21 * /A20
+          + /AS * /UDS * /A23 * /A22 * /A21 * /A20
+          + /AS * /LDS * /A23 * /A22 * /A21 * /A20
+
 DTACK.T   = GND
 DTACK.E   = /PPDTACK
 
 DESCRIPTION
-
+/ROMSEL = /EVNROM + /ODDROM
+/RAMSEL = /EVNRAM + /ODDRAM
 ROM/RAM address decoding
 
 ROM     (0x00000000 - 0x000FFFFF) 1MB
 RAM     (0x00E00000 - 0x00EFFFFF) 1MB
+DUART   (0x00F00000 - 0x00FFFFFF)

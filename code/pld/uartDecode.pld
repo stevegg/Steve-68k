@@ -1,20 +1,14 @@
 GAL16V8
 GLUE
+ 
+UDS  LDS    RW     A18   A17    A16   A15   A14   IOSEL     GND
+NC   NC     NC     NC    NC     NC    NC    NC    URTSEL    VCC
 
-UDS  LDS    RW     AS    A23    A22   A21   A20   DTKURT    GND
-NC   DTACK  URTSEL NC    NC     NC    NC    NC    NC        VCC
-
-
-/URTSEL = A23 * A22 * A21 * /A20 * /LDS
-
-DTACK.T = /DTKURT
-DTACK.E = A23 * A22 * A21 * /A20 * /LDS
-
+/URTSEL = /LDS * /A18 * /A17 * /A16 * /A15 * A14
+          
 
 DESCRIPTION
-Address Decoding
-
-ROM     (0x0000 - 0x1FFFF)
-RAM     (0x20000 - 0x5FFFF)
-IO      (0xE0000 - 0xFFFFF)
-DUART   (0x100000 - 0x10FFFF)
+Address Decoding for UART
+           2         1
+        321098765432109876543210
+UART =  111110000100000000000000 = F84000

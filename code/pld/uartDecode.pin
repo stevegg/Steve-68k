@@ -5,21 +5,21 @@
    1   | UDS      | Input
    2   | LDS      | Input
    3   | RW       | Input
-   4   | AS       | Input
-   5   | A23      | Input
-   6   | A22      | Input
-   7   | A21      | Input
-   8   | A20      | Input
-   9   | DTKURT   | Input
+   4   | A18      | Input
+   5   | A17      | Input
+   6   | A16      | Input
+   7   | A15      | Input
+   8   | A14      | Input
+   9   | IOSEL    | Input
   10   | GND      | GND
   11   | NC       | Input
-  12   | DTACK    | Output
-  13   | URTSEL   | Output
+  12   | NC       | NC
+  13   | NC       | NC
   14   | NC       | NC
   15   | NC       | NC
   16   | NC       | NC
   17   | NC       | NC
   18   | NC       | NC
-  19   | NC       | NC
+  19   | URTSEL   | Output
   20   | VCC      | VCC
 
